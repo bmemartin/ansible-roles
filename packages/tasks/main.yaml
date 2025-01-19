@@ -1,0 +1,52 @@
+---
+
+- name: Update package cache
+  ansible.builtin.apt:
+    update_cache: '{{ apt_update_cache }}'
+    cache_valid_time: '{{ apt_cache_valid_time }}'
+  tags:
+    - packages
+    - update
+
+- name: Upgrade installed packages
+  ansible.builtin.apt:
+    upgrade: safe
+  tags:
+    - packages
+    - update
+
+- name: Install essential packages
+  ansible.builtin.apt:
+    name: '{{ packages }}'
+    state: present
+  tags: packages
+
+- name: Remove old packages from cache
+  ansible.builtin.apt:
+    autoclean: yes
+  tags:
+    - packages
+    - update
+
+- name: Remove unused dependency packages
+  ansible.builtin.apt:
+    autoremove: yes
+    purge: yes
+  tags:
+    - packages
+    - update
+
+- name: Report changed packages
+  block:
+    - name: List changed packages
+      ansible.builtin.shell:
+        cmd: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade|remove|purge) " /var/log/dpkg.log | cut -d ' ' -f 3-5
+      register: dpkg_changes
+      changed_when: False
+
+    - name: Print changed packages
+      debug:
+        msg: '{{ dpkg_changes.stdout_lines }}'
+  tags:
+    - packages
+    - update

@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Generated files by Ansible
+ansible.log

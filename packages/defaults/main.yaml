@@ -1,0 +1,13 @@
+---
+
+# Update the apt cache if it is older than this number of seconds.
+apt_cache_valid_time: 3600
+
+# Run the equivalent of apt-get update before the operation.
+apt_update_cache: true
+
+# The list of essential packages to be installed.
+packages:
+  - net-tools
+  - python3
+  - python3-pip
