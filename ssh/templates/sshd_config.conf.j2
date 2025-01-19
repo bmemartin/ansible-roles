@@ -1,0 +1,4 @@
+PasswordAuthentication {{ 'yes' if ssh_password_authentication else 'no' }}
+{% if ssh_permit_root_login is defined %}
+PermitRootLogin {{ ssh_permit_root_login }}
+{% endif %}

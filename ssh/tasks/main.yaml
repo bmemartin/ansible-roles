@@ -1,0 +1,19 @@
+---
+
+- name: Add user authorized keys
+  ansible.posix.authorized_key:
+    user: '{{ ansible_user }}'
+    state: present
+    key: "{{ ssh_authorized_keys | default('', true) }}"
+    exclusive: '{{ ssh_authorized_keys_exclusive }}'
+  tags: ssh
+
+- name: Create sshd_config overrides
+  ansible.builtin.template:
+    src: sshd_config.conf.j2
+    dest: /etc/ssh/sshd_config.d/99-ansible-settings.conf
+    group: root
+    owner: root
+    mode: 0644
+  notify: restart ssh.service
+  tags: ssh
