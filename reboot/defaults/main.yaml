@@ -1,0 +1,5 @@
+---
+
+# The host should be rebooted regardless of any requirement.
+# Useful as a command-line override to reboot specific host(s).
+reboot_always: false
