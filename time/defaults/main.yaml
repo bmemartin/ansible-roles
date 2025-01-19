@@ -1,0 +1,10 @@
+---
+
+# The network time protocol server.
+ntp: time.cloudflare.com
+
+# The fallback network time protocol server.
+ntp_fallback:
+
+# The timezone of the host.
+timezone: Australia/Brisbane
