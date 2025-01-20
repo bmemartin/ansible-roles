@@ -1,0 +1,43 @@
+network:
+  version: 2
+  renderer: {{ netplan_renderer }}
+  ethernets:
+{% for ethernet in netplan_ethernets %}
+    {{ ethernet.interface }}:
+      dhcp4: {{ ethernet.dhcp4 | default(false) | string | lower }}
+      dhcp6: {{ ethernet.dhcp6 | default(false) | string | lower }}
+{% if ethernet.accept_ra is defined %}
+      accept-ra: {{ ethernet.accept_ra | string | lower }}
+{% endif %}
+{% if ethernet.addresses is defined and ethernet.addresses %}
+      addresses:
+{% for address in ethernet.addresses %}
+        - '{{ address }}'
+{% endfor %}
+{% endif %}
+{% if ethernet.nameservers is defined and ethernet.nameservers %}
+      nameservers:
+{% if ethernet.nameservers.addresses is defined and ethernet.nameservers.addresses %}
+        addresses:
+{% for address in ethernet.nameservers.addresses %}
+          - '{{ address }}'
+{% endfor %}
+{% endif %}
+{% if ethernet.nameservers.search is defined and ethernet.nameservers.search %}
+        search:
+{% for domain in ethernet.nameservers.search %}
+          - '{{ domain }}'
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if ethernet.routes is defined and ethernet.routes %}
+      routes:
+{% for route in ethernet.routes %}
+        - to: '{{ route.to }}'
+          via: '{{ route.via }}'
+{% if route.on_link is defined %}
+          on-link: {{ route.on_link | string | lower }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}

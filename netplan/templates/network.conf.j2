@@ -1,0 +1,6 @@
+{% if ipv6_accept_ra is defined %}
+[IPv6AcceptRA]
+{% if ipv6_accept_ra.use_dns is defined %}
+UseDNS={{ ipv6_accept_ra.use_dns | string | lower }}
+{% endif %}
+{% endif %}

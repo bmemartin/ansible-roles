@@ -1,0 +1,46 @@
+---
+
+- name: Create directory
+  ansible.builtin.file:
+    name: /etc/netplan
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags: netplan
+
+- name: Create configuration
+  ansible.builtin.template:
+    src: netplan.yaml.j2
+    dest: /etc/netplan/99-ansible.yaml
+    group: root
+    owner: root
+    mode: 0600
+  notify: apply netplan
+  tags: netplan
+
+- name: Create networkd override configuration
+  block:
+    - name: Create networkd directory
+      ansible.builtin.file:
+        name: '/etc/systemd/network/10-netplan-{{ item.interface }}.network.d'
+        state: "{{ 'directory' if item.networkd_overrides is defined else 'absent' }}"
+        owner: root
+        group: root
+        mode: 0755
+      loop: '{{ netplan_ethernets }}'
+
+    - name: Create networkd configuration
+      ansible.builtin.template:
+        src: network.conf.j2
+        dest: /etc/systemd/network/10-netplan-{{ item.interface }}.network.d/10-netplan-{{ item.interface }}.network.conf
+        group: root
+        owner: root
+        mode: 0644
+      vars:
+        ipv6_accept_ra: '{{ item.networkd_overrides.ipv6_accept_ra }}'
+      when: item.networkd_overrides is defined
+      loop: '{{ netplan_ethernets }}'
+  when: netplan_renderer == 'networkd'
+  notify: restart networkd.service
+  tags: netplan

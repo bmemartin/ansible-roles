@@ -1,0 +1,9 @@
+---
+
+- name: apply netplan
+  ansible.builtin.command: netplan apply
+
+- name: restart networkd.service
+  ansible.builtin.systemd_service:
+    name: systemd-networkd.service
+    state: restarted
