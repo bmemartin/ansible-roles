@@ -11,6 +11,7 @@ A collection of Ansible roles for automating homelab deployments.
 - [SSH](ssh/README.md)
 - [Time](time/README.md)
 - [UFW](ufw/README.md)
+- [Unbound](unbound/README.md)
 
 ## 🚀 Deployed On
 

@@ -1,0 +1,62 @@
+---
+
+- name: Install Unbound
+  ansible.builtin.apt:
+    name: unbound
+    state: "{{ 'latest' if apt_update_latest else 'present' }}"
+    update_cache: '{{ apt_update_cache }}'
+    cache_valid_time: '{{ apt_cache_valid_time }}'
+  tags:
+    - unbound
+    - update
+
+- name: Create configuration
+  ansible.builtin.template:
+    src: unbound.conf.j2
+    dest: /etc/unbound/unbound.conf.d/ansible.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: unbound_configuration
+  tags: unbound
+
+- name: Check configuration
+  ansible.builtin.command: unbound-checkconf /etc/unbound/unbound.conf.d/ansible.conf
+  when: unbound_configuration is changed
+  notify: restart unbound.service
+  tags: unbound
+
+- name: Create log file
+  block:
+    - name: Create log directory
+      ansible.builtin.file:
+        name: '{{ unbound_logfile | dirname }}'
+        state: directory
+        owner: root
+        group: root
+
+    - name: Create logfile
+      ansible.builtin.file:
+        path: '{{ unbound_logfile }}'
+        state: touch
+        owner: unbound
+        group: unbound
+        mode: 0640
+        access_time: preserve
+        modification_time: preserve
+
+    - name: Add logfile to /etc/apparmor.d/local/usr.sbin.unbound
+      ansible.builtin.lineinfile:
+        path: /etc/apparmor.d/local/usr.sbin.unbound
+        line: '{{ unbound_logfile }} rw,'
+        state: present
+        search_string: '{{ unbound_logfile }}'
+      register: unbound_apparmor
+
+    - name: Load AppArmor profile
+      ansible.builtin.command: apparmor_parser -r /etc/apparmor.d/usr.sbin.unbound
+      when: unbound_apparmor is changed
+      notify: restart apparmor.service
+  when: unbound_logfile
+  notify: restart unbound.service
+  tags: unbound

@@ -1,0 +1,33 @@
+server:
+    verbosity: {{ unbound_verbosity }}
+    num-threads: {{ unbound_num_threads }}
+    port: {{ unbound_port }}
+{% if unbound_interfaces %}
+{% for interface in unbound_interfaces %}
+    interface: {{ interface }}
+{% endfor %}
+{% endif %}
+    edns-buffer-size: {{ unbound_edns_buffer_size }}
+    so-rcvbuf: {{ unbound_so_rcvbuf }}
+    do-ip4: {{ 'yes' if unbound_do_ip4 else 'no' }}
+    do-ip6: {{ 'yes' if unbound_do_ip6 else 'no' }}
+    do-udp: {{ 'yes' if unbound_do_udp else 'no' }}
+    do-tcp: {{ 'yes' if unbound_do_tcp else 'no' }}
+{% if unbound_logfile %}
+    logfile: {{ unbound_logfile }}
+    log-time-ascii: yes
+{% else %}
+    use-syslog: yes
+{% endif %}
+{% if unbound_root_hints %}
+    root-hints: {{ unbound_root_hints }}
+{% endif %}
+    harden-glue: {{ 'yes' if unbound_harden_glue else 'no' }}
+    harden-dnssec-stripped: {{ 'yes' if unbound_harden_dnssec_stripped else 'no' }}
+    use-caps-for-id: {{ 'yes' if unbound_use_caps_for_id else 'no' }}
+{% if unbound_private_addresses %}
+{% for address in unbound_private_addresses %}
+    private-address: {{ address }}
+{% endfor %}
+{% endif %}
+    prefetch: {{ 'yes' if unbound_prefetch else 'no' }}

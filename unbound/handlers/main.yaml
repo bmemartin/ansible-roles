@@ -1,0 +1,11 @@
+---
+
+- name: restart apparmor.service
+  ansible.builtin.systemd_service:
+    name: apparmor.service
+    state: restarted
+
+- name: restart unbound.service
+  ansible.builtin.systemd_service:
+    name: unbound.service
+    state: restarted

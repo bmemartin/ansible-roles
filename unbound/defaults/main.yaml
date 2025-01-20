@@ -1,0 +1,71 @@
+---
+
+# Update the apt cache if it is older than this number of seconds.
+apt_cache_valid_time: 3600
+
+# Run the equivalent of apt-get update before the operation.
+apt_update_cache: true
+
+# Ensure that the latest package version is installed.
+apt_update_latest: true
+
+# IPv4 queries are answered or issued.
+unbound_do_ip4: true
+
+# IPv6 queries are answered or issued.
+unbound_do_ip6: true
+
+# TCP queries are answered or issued.
+unbound_do_tcp: true
+
+# UDP queries are answered or issued.
+unbound_do_udp: true
+
+# Number of bytes size to advertise as the EDNS reassembly buffer size.
+unbound_edns_buffer_size: 1232
+
+# Require DNSSEC data for trust-anchored zones, if such data is absent, the zone becomes bogus.
+unbound_harden_dnssec_stripped: true
+
+# Trust glue only if it is within the servers authority.
+unbound_harden_glue: true
+
+# A list of interfaces to listen for queries from clients, and answers to clients be given.
+unbound_interfaces:
+  - 127.0.0.1
+  - ::1
+
+# The logfile; otherwise use syslog.
+unbound_logfile:
+
+# The number of threads to create to serve clients.
+# Use 1 for no threading.
+unbound_num_threads: 1
+
+# The port number on which the server responds to queries.
+unbound_port: 53
+
+# Message cache elements are prefetched before they expire to keep the cache up to date.
+unbound_prefetch: false
+
+# A list of private network addresses that are not allowed to be returned for public internet names.
+unbound_private_addresses:
+  - 10.0.0.0/8
+  - 172.16.0.0/12
+  - 192.168.0.0/16
+  - 169.254.0.0/16
+  - fd00::/8
+  - fe80::/10
+
+# Read the root hints from this file.
+unbound_root_hints:
+
+# If not 0, then set the SO_RCVBUF socket option to get more buffer space on UDP port 53 incoming queries.
+unbound_so_rcvbuf: 0
+
+# Use 0x20-encoded random bits in the query to foil spoof attempts.
+unbound_use_caps_for_id: false
+
+# The verbosity level.
+# Range: 0-5
+unbound_verbosity: 1
