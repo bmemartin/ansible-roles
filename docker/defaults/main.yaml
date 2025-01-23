@@ -1,0 +1,10 @@
+---
+
+# Update the apt cache if it is older than this number of seconds.
+apt_cache_valid_time: 3600
+
+# Run the equivalent of apt-get update before the operation.
+apt_update_cache: true
+
+# Ensure that the latest package version is installed.
+apt_update_latest: true
