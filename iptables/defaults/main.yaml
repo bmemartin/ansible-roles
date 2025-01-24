@@ -1,0 +1,26 @@
+---
+
+# Update the apt cache if it is older than this number of seconds.
+apt_cache_valid_time: 3600
+
+# Run the equivalent of apt-get update before the operation.
+apt_update_cache: true
+
+# Ensure that the latest package version is installed.
+apt_update_latest: true
+
+# The default policy for forwarding traffic.
+# Options: 'ACCEPT', 'DROP', 'QUEUE', 'RETURN'
+firewall_forward: DROP
+
+# The default policy for incoming traffic.
+# Options: 'ACCEPT', 'DROP', 'QUEUE', 'RETURN'
+firewall_input: DROP
+
+# The default policy for outgoing traffic.
+# Options: 'ACCEPT', 'DROP', 'QUEUE', 'RETURN'
+firewall_output: ACCEPT
+
+# Reset firewall to installation defaults.
+# Useful as a command-line override to reconfigure firewall rules.
+firewall_reset: false

@@ -7,6 +7,7 @@ A collection of Ansible roles for automating homelab deployments.
 - [Ansible](ansible/README.md)
 - [Docker](docker/README.md)
 - [Hostname](hostname/README.md)
+- [iptables](iptables/README.md)
 - [Netplan](netplan/README.md)
 - [Packages](packages/README.md)
 - [Reboot](reboot/README.md)

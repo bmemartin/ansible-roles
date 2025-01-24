@@ -1,0 +1,5 @@
+---
+
+- name: save iptables
+  ansible.builtin.shell:
+    cmd: iptables-save -f /etc/iptables/rules.v4 && ip6tables-save -f /etc/iptables/rules.v6

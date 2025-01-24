@@ -1,0 +1,114 @@
+---
+
+- name: Install iptables
+  ansible.builtin.apt:
+    name:
+      - iptables
+      - iptables-persistent
+    state: "{{ 'latest' if apt_update_latest else 'present' }}"
+    update_cache: '{{ apt_update_cache }}'
+    cache_valid_time: '{{ apt_cache_valid_time }}'
+  notify: save iptables
+  tags:
+    - firewall
+    - update
+
+- name: Reset firewall to installation defaults
+  block:
+    - name: Set default policy to allow
+      ansible.builtin.iptables:
+        chain: '{{ item }}'
+        policy: ACCEPT
+      loop:
+        - INPUT
+        - FORWARD
+        - OUTPUT
+      notify: save iptables
+
+    - name: Flush all firewall rules
+      ansible.builtin.iptables:
+        flush: true
+      notify: save iptables
+  when: firewall_reset
+  tags: firewall
+
+- name: Allow incoming loopback connections
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+  notify: save iptables
+  tags: firewall
+
+- name: Allow outgoing loopback connections
+  ansible.builtin.iptables:
+    chain: OUTPUT
+    out_interface: lo
+    jump: ACCEPT
+  notify: save iptables
+  tags: firewall
+
+- name: Allow established and related incoming connections
+  ansible.builtin.iptables:
+    chain: INPUT
+    ctstate:
+      - ESTABLISHED
+      - RELATED
+    jump: ACCEPT
+  notify: save iptables
+  tags: firewall
+
+- name: Allow established outgoing connections
+  ansible.builtin.iptables:
+    chain: OUTPUT
+    ctstate: ESTABLISHED
+    jump: ACCEPT
+  notify: save iptables
+  tags: firewall
+
+- name: Drop invalid packets
+  ansible.builtin.iptables:
+    chain: '{{ item }}'
+    ctstate: INVALID
+    jump: DROP
+  loop:
+    - INPUT
+    - FORWARD
+  notify: save iptables
+  tags: firewall
+
+- name: Accept incoming and outgoing SSH connections
+  ansible.builtin.iptables:
+    chain: '{{ item }}'
+    protocol: tcp
+    destination_port: ssh
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: ACCEPT
+  loop:
+    - INPUT
+    - OUTPUT
+  notify: save iptables
+  tags: firewall
+
+- name: Set default policy for outgoing traffic
+  ansible.builtin.iptables:
+    chain: OUTPUT
+    policy: '{{ firewall_output }}'
+  notify: save iptables
+  tags: firewall
+
+- name: Set default policy for forwarding traffic
+  ansible.builtin.iptables:
+    chain: FORWARD
+    policy: '{{ firewall_forward }}'
+  notify: save iptables
+  tags: firewall
+
+- name: Set default policy for incoming traffic
+  ansible.builtin.iptables:
+    chain: INPUT
+    policy: '{{ firewall_input }}'
+  notify: save iptables
+  tags: firewall
