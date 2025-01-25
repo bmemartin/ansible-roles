@@ -1,0 +1,4 @@
+---
+
+# The specific version to download and install.
+kubectl_version:

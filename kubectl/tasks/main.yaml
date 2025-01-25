@@ -1,0 +1,50 @@
+---
+
+- name: Get installed version
+  ansible.builtin.shell:
+    cmd: kubectl version --client=true | grep 'Client Version' | cut -d ' ' -f 3
+  register: kubectl_installed
+  changed_when: False
+  tags:
+    - kubectl
+    - update
+
+- name: Get latest version
+  ansible.builtin.uri:
+    url: https://dl.k8s.io/release/stable.txt
+    return_content: true
+  register: kubectl_latest
+  when: kubectl_version | default('', true) | length == 0
+  tags:
+    - kubectl
+    - update
+
+- name: Set targeted version
+  ansible.builtin.set_fact:
+    kubectl_version: '{{ kubectl_latest.content }}'
+  when: kubectl_version | default('', true) | length == 0
+  tags:
+    - kubectl
+    - update
+
+- name: Install kubectl
+  ansible.builtin.get_url:
+    url: 'https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl'
+    dest: /usr/local/bin/kubectl
+    checksum: 'sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl.sha256'
+    owner: root
+    group: root
+    mode: 0755
+  register: kubectl_binary
+  when: ansible_architecture == 'x86_64' and kubectl_version != kubectl_installed.stdout
+  tags:
+    - kubectl
+    - update
+
+- name: Print changed version
+  debug:
+    msg: '{{ kubectl_installed.stdout }} > {{ kubectl_version }}'
+  when: kubectl_installed.stdout | length > 0 and kubectl_binary is changed
+  tags:
+    - kubectl
+    - update
