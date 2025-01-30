@@ -1,6 +1,6 @@
-# Homelab Roles
+# Ansible Roles
 
-A collection of Ansible roles for automating homelab deployments.
+A collection of Ansible roles for automating host configuration and application deployment.
 
 ## 📜 Roles
 
