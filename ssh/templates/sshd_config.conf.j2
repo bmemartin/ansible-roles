@@ -1,3 +1,12 @@
+{% if ssh_host_key_algorithms is defined and ssh_host_key_algorithms %}
+HostKeyAlgorithms {{ ssh_host_key_algorithms }}
+{% endif %}
+{% if ssh_kex_algorithms is defined and ssh_kex_algorithms %}
+KexAlgorithms {{ ssh_kex_algorithms }}
+{% endif %}
+{% if ssh_macs is defined and ssh_macs %}
+MACs {{ ssh_macs }}
+{% endif %}
 PasswordAuthentication {{ 'yes' if ssh_password_authentication else 'no' }}
 {% if ssh_permit_root_login is defined %}
 PermitRootLogin {{ ssh_permit_root_login }}
