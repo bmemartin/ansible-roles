@@ -1,0 +1,82 @@
+---
+
+- name: Fail when docker_compose_name is undefined
+  ansible.builtin.fail:
+    msg: variable docker_compose_name is undefined
+  when: docker_compose_name | default('', true) | length == 0
+  tags: docker_compose
+
+- name: Create docker network
+  community.docker.docker_network:
+    name: '{{ item }}'
+    state: present
+  loop: '{{ docker_compose_networks | default([], true) }}'
+  tags: docker_compose
+
+- name: Create project directory
+  ansible.builtin.file:
+    name: '{{ docker_compose_path }}/{{ docker_compose_name }}'
+    state: directory
+    owner: '{{ docker_compose_owner }}'
+    group: '{{ docker_compose_group }}'
+    mode: 0755
+  notify: docker compose up
+  tags: docker_compose
+
+- name: Create docker compose from file
+  ansible.builtin.copy:
+    src: '{{ docker_compose_file }}'
+    dest: '{{ docker_compose_path }}/{{ docker_compose_name }}/docker-compose.yaml'
+    owner: '{{ docker_compose_owner }}'
+    group: '{{ docker_compose_group }}'
+    mode: 0644
+  notify: docker compose up
+  tags: docker_compose
+
+- name: Copy additional files and directories
+  ansible.builtin.copy:
+    src: '{{ item.src }}'
+    dest: '{{ docker_compose_path }}/{{ docker_compose_name }}/{{ item.dest }}'
+    owner: '{{ docker_compose_owner }}'
+    group: '{{ docker_compose_group }}'
+    mode: "{{ item.mode | default('preserve', true) }}"
+  when: item.src is defined
+  loop: '{{ docker_compose_extras | default([], true) }}'
+  loop_control:
+    label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
+  notify: docker compose up
+  tags: docker_compose
+
+- name: Create additional files from content
+  ansible.builtin.copy:
+    content: '{{ item.content }}'
+    dest: '{{ docker_compose_path }}/{{ docker_compose_name }}/{{ item.dest }}'
+    owner: '{{ docker_compose_owner }}'
+    group: '{{ docker_compose_group }}'
+    mode: "{{ item.mode | default('preserve', true) }}"
+  when: item.content is defined
+  loop: '{{ docker_compose_extras | default([], true) }}'
+  loop_control:
+    label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
+  notify: docker compose up
+  tags: docker_compose
+
+- name: Create additional files from templates
+  ansible.builtin.template:
+    src: '{{ item.template }}'
+    dest: '{{ docker_compose_path }}/{{ docker_compose_name }}/{{ item.dest }}'
+    owner: '{{ docker_compose_owner }}'
+    group: '{{ docker_compose_group }}'
+    mode: "{{ item.mode | default('0644', true) }}"
+  when: item.template is defined
+  loop: '{{ docker_compose_extras | default([], true) }}'
+  loop_control:
+    label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
+  notify: docker compose up
+  tags: docker_compose
+
+- name: Trigger `docker compose up --force-recreate`
+  command: /bin/true
+  when: "'docker_compose_up' in ansible_run_tags"
+  notify: docker compose up
+  tags: docker_compose_up

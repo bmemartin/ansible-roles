@@ -1,0 +1,40 @@
+---
+
+# The docker compose source file.
+docker_compose_file: docker-compose.yaml
+
+# The name of the group to own the project files and directories.
+docker_compose_group: root
+
+# The name of the docker compose project.
+docker_compose_name:
+
+# A list of docker networks to be additionally created.
+docker_compose_networks:
+
+# The name of the user to own the project files and directories.
+docker_compose_owner: root
+
+# The remote absolute path of the parent directory to the project.
+docker_compose_path: /docker
+
+# Pull image(s) before running.
+# Options: 'always', 'missing', 'never', 'policy'
+docker_compose_pull: policy
+
+# A list of files and directories to establish on the remote server.
+docker_compose_extras:
+    # The local path to a file or directory.
+# - src:
+
+    # The contents of the file.
+# - content:
+
+    # The local path of a Jinja2 formatted template.
+# - template:
+
+    # The remote relative path to the project directory.
+#   dest:
+
+    # The permissions of the destination file or directory.
+#   mode: '0644'

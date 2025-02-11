@@ -6,6 +6,7 @@ A collection of Ansible roles for automating host configuration and application 
 
 - [Ansible](ansible/README.md)
 - [Docker](docker/README.md)
+- [Docker Compose](docker_compose/README.md)
 - [Hostname](hostname/README.md)
 - [iptables](iptables/README.md)
 - [kubectl](kubectl/README.md)
