@@ -36,5 +36,11 @@ docker_compose_extras:
     # The remote relative path to the project directory.
 #   dest:
 
+    # The name of the user to own the file or directory.
+#   owner: '{{ docker_compose_owner }}'
+
+    # The name of the group to own the file or directory.
+#   group: '{{ docker_compose_group }}'
+
     # The permissions of the destination file or directory.
-#   mode: '0644'
+#   mode: 'preserve'
