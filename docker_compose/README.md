@@ -13,7 +13,7 @@ Minimal Ansible playbook
   roles:
     - role: docker_compose
       vars:
-        docker_compose_name: project
+        docker_compose_path: /project
 ```
 
 ### Configuration
