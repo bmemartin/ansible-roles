@@ -4,15 +4,19 @@
 docker_compose_file: docker-compose.yaml
 
 # A list of additional files and directories to establish on the remote server.
+# - Include `src` to copy a file or directory
+# - Include `content` to create a file with the specified content
+# - Include `template` to create a file from the specified template
+# - Exclude `src`, `content`, and `template` to create a directory
 docker_compose_files:
     # The local path to a file or directory.
 # - src:
 
     # The contents of the file.
-# - content:
+#   content:
 
     # The local path of a Jinja2 formatted template.
-# - template:
+#   template:
 
     # The remote relative path to the project directory.
 #   dest:

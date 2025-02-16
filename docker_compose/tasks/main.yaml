@@ -20,6 +20,20 @@
   notify: docker compose up
   tags: docker_compose
 
+- name: Create directory
+  ansible.builtin.file:
+    name: '{{ docker_compose_path }}/{{ item.dest }}'
+    state: directory
+    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
+    group: '{{ item.group | default(docker_compose_group, true) }}'
+    mode: "{{ item.mode | default('0755', true) }}"
+  when: item.src is not defined and item.content is not defined and item.template is not defined
+  loop: '{{ docker_compose_files | default([], true) }}'
+  loop_control:
+    label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
+  notify: docker compose up
+  tags: docker_compose
+
 - name: Copy file or directory
   ansible.builtin.copy:
     src: '{{ item.src }}'
