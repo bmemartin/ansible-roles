@@ -7,7 +7,9 @@
     owner: '{{ docker_compose_owner }}'
     group: '{{ docker_compose_group }}'
     mode: 0755
-  notify: docker compose up
+  notify:
+    - docker compose force recreate
+    - docker prune
   tags: docker_compose
 
 - name: Create docker compose file
@@ -17,7 +19,9 @@
     owner: '{{ docker_compose_owner }}'
     group: '{{ docker_compose_group }}'
     mode: 0644
-  notify: docker compose up
+  notify:
+    - docker compose force recreate
+    - docker prune
   tags: docker_compose
 
 - name: Create directory
@@ -31,7 +35,9 @@
   loop: '{{ docker_compose_files | default([], true) }}'
   loop_control:
     label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify: docker compose up
+  notify:
+    - docker compose force recreate
+    - docker prune
   tags: docker_compose
 
 - name: Copy file or directory
@@ -45,7 +51,9 @@
   loop: '{{ docker_compose_files | default([], true) }}'
   loop_control:
     label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify: docker compose up
+  notify:
+    - docker compose force recreate
+    - docker prune
   tags: docker_compose
 
 - name: Create file from content
@@ -59,7 +67,9 @@
   loop: '{{ docker_compose_files | default([], true) }}'
   loop_control:
     label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify: docker compose up
+  notify:
+    - docker compose force recreate
+    - docker prune
   tags: docker_compose
 
 - name: Create file from template
@@ -73,7 +83,9 @@
   loop: '{{ docker_compose_files | default([], true) }}'
   loop_control:
     label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify: docker compose up
+  notify:
+    - docker compose force recreate
+    - docker prune
   tags: docker_compose
 
 - name: Create docker network
@@ -81,10 +93,15 @@
     name: '{{ item }}'
     state: present
   loop: '{{ docker_compose_networks | default([], true) }}'
+  notify:
+    - docker compose force recreate
+    - docker prune
   tags: docker_compose
 
-- name: Trigger `docker compose up --force-recreate`
+- name: Trigger `docker compose up`
   command: /bin/true
   when: "'docker_compose_up' in ansible_run_tags"
-  notify: docker compose up
+  notify:
+    - docker compose up
+    - docker prune
   tags: docker_compose_up

@@ -1,8 +1,28 @@
 ---
 
-- name: docker compose up
+- name: docker compose force recreate
   community.docker.docker_compose_v2:
     project_src: '{{ docker_compose_path }}'
     state: present
     pull: '{{ docker_compose_pull }}'
     recreate: always
+
+- name: docker compose up
+  community.docker.docker_compose_v2:
+    project_src: '{{ docker_compose_path }}'
+    state: present
+    pull: '{{ docker_compose_pull }}'
+    recreate: '{{ docker_compose_recreate }}'
+
+- name: docker prune
+  community.docker.docker_prune:
+    builder_cache: '{{ docker_prune_builder_cache }}'
+    builder_cache_filters: '{{ docker_prune_builder_cache_filters }}'
+    containers: '{{ docker_prune_containers }}'
+    containers_filters: '{{ docker_prune_containers_filters }}'
+    images: '{{ docker_prune_images }}'
+    images_filters: '{{ docker_prune_images_filters }}'
+    networks: '{{ docker_prune_networks }}'
+    networks_filters: '{{ docker_prune_networks_filters }}'
+    volumes: '{{ docker_prune_volumes }}'
+    volumes_filters: '{{ docker_prune_volumes_filters }}'

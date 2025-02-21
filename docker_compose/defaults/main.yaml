@@ -42,6 +42,40 @@ docker_compose_owner: '{{ ansible_user }}'
 # The remote path of the docker compose project.
 docker_compose_path:
 
-# Pull image(s) before running.
+# The policy on pulling container image(s) before running.
 # Options: 'always', 'missing', 'never', 'policy'
 docker_compose_pull: policy
+
+# The policy on recreating containers.
+# Options: 'always', 'never', 'auto'
+docker_compose_recreate: auto
+
+# Prune the builder cache after changes are detected.
+docker_prune_builder_cache: false
+
+# A dictionary of filter values used for selecting images to delete.
+docker_prune_builder_cache_filters:
+
+# Prune containers after changes are detected.
+docker_prune_containers: false
+
+# A dictionary of filter values used for selecting containers to delete.
+docker_prune_containers_filters:
+
+# Prune images after changes are detected.
+docker_prune_images: false
+
+# A dictionary of filter values used for selecting images to delete.
+docker_prune_images_filters:
+
+# Prune networks after changes are detected.
+docker_prune_networks: false
+
+# A dictionary of filter values used for selecting networks to delete.
+docker_prune_networks_filters:
+
+# Prune volumes after changes are detected.
+docker_prune_volumes: false
+
+# A dictionary of filter values used for selecting volumes to delete.
+docker_prune_volumes_filters:
