@@ -11,6 +11,7 @@
 - name: Upgrade installed packages
   ansible.builtin.apt:
     upgrade: safe
+  register: apt_upgrade_result
   tags:
     - packages
     - update
@@ -19,6 +20,7 @@
   ansible.builtin.apt:
     name: '{{ packages }}'
     state: present
+  register: apt_install_result
   tags: packages
 
 - name: Remove old packages from cache
@@ -32,21 +34,28 @@
   ansible.builtin.apt:
     autoremove: yes
     purge: yes
+  register: apt_remove_result
   tags:
     - packages
     - update
 
-- name: Report changed packages
-  block:
-    - name: List changed packages
-      ansible.builtin.shell:
-        cmd: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade|remove|purge) " /var/log/dpkg.log | cut -d ' ' -f 3-5
-      register: dpkg_changes
-      changed_when: False
+- name: Find changed packages
+  ansible.builtin.shell:
+    cmd: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade|remove|purge) " /var/log/dpkg.log | cut -d ' ' -f 3-5
+  register: dpkg_changes
+  changed_when: False
+  tags:
+    - packages
+    - update
 
-    - name: Print changed packages
-      debug:
-        msg: '{{ dpkg_changes.stdout_lines }}'
+- name: Print changed packages
+  debug:
+    msg: '{{ dpkg_changes.stdout_lines }}'
+  when: dpkg_changes.stdout_lines | length > 0
+  changed_when: >
+    (apt_upgrade_result is defined and apt_upgrade_result is changed) or
+    (apt_install_result is defined and apt_install_result is changed) or
+    (apt_remove_result is defined and apt_remove_result is changed)
   tags:
     - packages
     - update
