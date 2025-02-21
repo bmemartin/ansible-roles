@@ -43,8 +43,9 @@
 
 - name: Print changed version
   debug:
-    msg: '{{ kubectl_installed.stdout }} > {{ kubectl_version }}'
+    msg: 'upgrade {{ kubectl_installed.stdout }} to {{ kubectl_version }}'
   when: kubectl_installed.stdout | length > 0 and kubectl_binary is changed
+  changed_when: True
   tags:
     - kubectl
     - update
