@@ -9,6 +9,13 @@
     - reboot
     - update
 
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+  when: reboot_always or reboot_required.stat.exists
+  tags:
+    - reboot
+    - update
+
 - name: Reboot host
   ansible.builtin.reboot:
     msg: Reboot initiated by Ansible
