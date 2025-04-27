@@ -1,0 +1,25 @@
+---
+
+- name: Set usable variables
+  ansible.builtin.set_fact:
+    pck: '{{ item.key }}'
+    pcv: "{% if (item.value | type_debug) == 'list' %}[ {{ item.value | join(', ')}} ]{% else %}{{ item.value }}{% endif %}"
+    pcj: "{% if (item.value | type_debug) == 'list' %}{{ item.value | to_json }}{% else %}{{ item.value }}{% endif %}"
+  tags: pihole
+
+- name: Target configuration
+  ansible.builtin.debug:
+    msg: '{{ pck }}: {{ pcv }}'
+  tags: pihole
+
+- name: Get configuration
+  ansible.builtin.command: pihole-FTL --config {{ pck }}
+  register: piholeftl_config
+  changed_when: False
+  tags: pihole
+
+- name: Set configuration
+  ansible.builtin.command: pihole-FTL --config {{ pck }} '{{ pcj }}'
+  when: (pcv | string | lower) != (piholeftl_config.stdout | lower)
+  notify: restart pihole-FTL.service
+  tags: pihole

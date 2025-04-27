@@ -1,0 +1,78 @@
+---
+
+- name: Get stats of Pi-hole binary
+  ansible.builtin.stat:
+    path: /usr/local/bin/pihole
+  register: pihole_binary
+  tags:
+    - pihole
+    - update
+
+- name: Create directory
+  ansible.builtin.file:
+    name: /etc/pihole
+    state: directory
+  tags: pihole
+
+- name: Create configuration file
+  ansible.builtin.file:
+    name: /etc/pihole/pihole.toml
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+  tags: pihole
+
+- name: Install Pi-hole
+  ansible.builtin.shell: 'curl -sSL https://install.pi-hole.net | PIHOLE_SKIP_OS_CHECK={{ pihole_skip_os_check | to_json }} bash /dev/stdin --unattended'
+  register: pihole_install
+  when: not pihole_binary.stat.exists | default(false)
+  failed_when: pihole_install.stderr_lines | difference(pihole_install_ignore_errors) | length
+  tags: pihole
+
+- name: Update Pi-hole
+  ansible.builtin.command: pihole updatePihole
+  register: pihole_update
+  changed_when: '"update available" in pihole_update.stdout'
+  when: pihole_binary.stat.exists | default(false)
+  notify: restart pihole-FTL.service
+  tags:
+    - pihole
+    - update
+
+- name: Apply configuration options
+  include_tasks: config.yaml
+  loop: '{{ pihole_config | default([], true) }}'
+  tags: pihole
+
+- name: Allow incoming DNS connections
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: '{{ item }}'
+    destination_port: 53
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: ACCEPT
+  when: pihole_set_iptable_rules
+  loop:
+    - tcp
+    - udp
+  notify: save iptables
+  tags:
+    - firewall
+    - pihole
+
+- name: Allow incoming HTTPS connections
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: https
+    ctstate:
+      - NEW
+      - ESTABLISHED
+    jump: ACCEPT
+  when: pihole_set_iptable_rules
+  notify: save iptables
+  tags:
+    - firewall
+    - pihole

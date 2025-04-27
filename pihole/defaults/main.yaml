@@ -1,0 +1,27 @@
+---
+
+# The custom configuration options.
+pihole_config:
+    # The configuration name (Upstream DNS Servers).
+  - key: dns.upstreams
+    # The configuration value (Cloudflare).
+    value:
+      - 1.1.1.1
+      - 1.0.0.1
+      - 2606:4700:4700::1111
+      - 2606:4700:4700::1001
+
+    # The configuration name (Webserver Ports).
+  - key: webserver.port
+    # The configuration value (HTTPS).
+    value: 443s,[::]:443s
+
+# The list of errors to ignore during installation.
+pihole_install_ignore_errors:
+  - 'Failed to stop pihole-FTL.service: Unit pihole-FTL.service not loaded.'
+
+# Sets the firewall rules in iptables.
+pihole_set_iptable_rules: true
+
+# Skip the OS check during installation.
+pihole_skip_os_check: false
