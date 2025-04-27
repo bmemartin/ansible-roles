@@ -77,7 +77,7 @@
   notify: save iptables
   tags: firewall
 
-- name: Accept incoming and outgoing SSH connections
+- name: Allow incoming and outgoing SSH connections
   ansible.builtin.iptables:
     chain: '{{ item }}'
     protocol: tcp
