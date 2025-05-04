@@ -24,7 +24,8 @@ Available configuration options, along with default values, are documented in [d
 | Tag | Description |
 | --- | ----------- |
 | pihole   | All tasks |
-| firewall | Sets the firewall rules |
+| firewall | Applies the firewall rule tasks |
+| iptables | Applies the iptables rule tasks |
 | update   | Update all components |
 
 ## ⌨️ Command-line Interface

@@ -44,26 +44,33 @@
   loop: '{{ pihole_config | default([], true) }}'
   tags: pihole
 
-- name: Allow incoming DNS connections
+- name: Allow incoming DNS traffic
   ansible.builtin.iptables:
+    ip_version: '{{ item.ip_version }}'
     chain: INPUT
-    protocol: '{{ item }}'
-    destination_port: 53
+    protocol: '{{ item.protocol }}'
+    destination_port: '{{ item.destination_port }}'
     ctstate:
       - NEW
       - ESTABLISHED
     jump: ACCEPT
-  when: pihole_set_iptable_rules
+  when: pihole_firewall_iptables
   loop:
-    - tcp
-    - udp
+    - ip_version: ipv4
+      protocol: tcp
+      destination_port: 53
+    - ip_version: ipv4
+      protocol: udp
+      destination_port: 53
   notify: save iptables
   tags:
     - firewall
+    - iptables
     - pihole
 
-- name: Allow incoming HTTPS connections
+- name: Allow incoming HTTPS traffic
   ansible.builtin.iptables:
+    ip_version: '{{ item.ip_version }}'
     chain: INPUT
     protocol: tcp
     destination_port: https
@@ -71,8 +78,12 @@
       - NEW
       - ESTABLISHED
     jump: ACCEPT
-  when: pihole_set_iptable_rules
+  when: pihole_firewall_iptables
+  loop:
+    - ip_version: ipv4
+    - ip_version: ipv6
   notify: save iptables
   tags:
     - firewall
+    - iptables
     - pihole
