@@ -1,0 +1,86 @@
+---
+
+- name: Install Keepalived
+  ansible.builtin.apt:
+    name: keepalived
+    state: "{{ 'latest' if apt_update_latest else 'present' }}"
+    update_cache: '{{ apt_update_cache }}'
+    cache_valid_time: '{{ apt_cache_valid_time }}'
+  tags: keepalived
+
+- name: Enable Keepalived on boot
+  ansible.builtin.systemd_service:
+    name: keepalived.service
+    enabled: true
+  tags: keepalived
+
+- name: Create configuration directory
+  ansible.builtin.file:
+    name: /etc/keepalived/conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags: keepalived
+
+- name: Create configuration
+  ansible.builtin.copy:
+    src: keepalived.conf
+    dest: /etc/keepalived/keepalived.conf
+    group: root
+    owner: root
+    mode: 0644
+  notify: restart keepalived.service
+  tags: keepalived
+
+- name: Create VRRP instances
+  ansible.builtin.template:
+    src: vrrp.conf.j2
+    dest: '/etc/keepalived/conf.d/vrrp_{{ item.name }}.conf'
+    group: root
+    owner: root
+    mode: 0644
+  when:
+    - item.name
+    - item.virtual_ipaddress
+  loop: '{{ keepalived_vrrp_instances | default([], true) }}'
+  notify: restart keepalived.service
+  tags: keepalived
+
+- name: Allow incoming VRRP multicast traffic
+  ansible.builtin.iptables:
+    ip_version: '{{ item.ip_version }}'
+    chain: INPUT
+    protocol: vrrp
+    destination: '{{ item.destination }}'
+    jump: ACCEPT
+  when: keepalived_firewall_iptables and keepalived_vrrp_instances | default([], true)
+  loop:
+    - ip_version: ipv4
+      destination: 224.0.0.18
+    - ip_version: ipv6
+      destination: ff02::12
+  notify: save iptables
+  tags:
+    - firewall
+    - iptables
+    - keepalived
+
+- name: Allow outgoing VRRP multicast traffic
+  ansible.builtin.iptables:
+    ip_version: '{{ item.ip_version }}'
+    chain: OUTPUT
+    protocol: vrrp
+    destination: '{{ item.destination }}'
+    jump: ACCEPT
+  when: keepalived_firewall_iptables and keepalived_vrrp_instances | default([], true)
+  loop:
+    - ip_version: ipv4
+      destination: 224.0.0.18
+    - ip_version: ipv6
+      destination: ff02::12
+  notify: save iptables
+  tags:
+    - firewall
+    - iptables
+    - keepalived

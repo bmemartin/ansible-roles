@@ -1,0 +1,68 @@
+---
+
+# Update the apt cache if it is older than this number of seconds.
+apt_cache_valid_time: 3600
+
+# Run the equivalent of apt-get update before the operation.
+apt_update_cache: true
+
+# Ensure that the latest package version is installed.
+apt_update_latest: true
+
+# Define the required firewall rules in iptables.
+keepalived_firewall_iptables: true
+
+# The list of VRRP instances to be configured.
+keepalived_vrrp_instances:
+    # Accept packets to non address-owner.
+# - accept: false
+
+    # The advertisement interval, in seconds.
+#   advert_int: 1
+
+    # The authentication password.
+    # Only the first eight (8) characters are used.
+#   auth_pass:
+
+    # The authentication type.
+    # Caution: authentication was removed from the VRRPv2 specification by RFC3768.
+    #   Use of this option is non-compliant.
+    # Options: 'AH', 'PASS'
+#   auth_type:
+
+    # Check that the unicast source address is one of the unicast peers.
+#   check_unicast_src: false
+
+    # The network interface to bind to.
+#   interface: '{{ ansible_default_ipv4.interface }}'
+
+    # The instance name.
+#   name:
+
+    # Drop packets to non address-owner.
+#   no_accept: false
+
+    # The host priority used when electing the MASTER; highest priority wins.
+    # A priority of 255 represents the overall MASTER and address-owner.
+    # Range: 1-255
+#   priority: 100
+
+    # The initial state.
+    # Options: 'MASTER', 'BACKUP'
+#   state: MASTER
+
+    # Enforce strict VRRP protocol compliance.
+#   strict_mode: false
+
+    # The list of IP addresses to send advertisement to using unicast instead of multicast.
+#   unicast_peers:
+
+    # The VRRP version to use; however IPv6 instances will always use version 3.
+#   version: 3
+
+    # The virtual IP address(es) defined as a string or list of strings.
+#   virtual_ipaddress:
+
+    # An arbitrary unique number used to differentiate multiple instances of vrrpd.
+    # Range: 1-255
+#   virtual_router_id: 51

@@ -1,0 +1,47 @@
+vrrp_instance {{ item.name }} {
+    state {{ item.state }}
+    interface {{ item.interface }}
+{% if item.version is defined %}
+    version {{ item.version }}
+{% endif %}
+{% if item.check_unicast_src | default(false) %}
+    check_unicast_src
+{% endif %}
+{% if item.unicast_peers is defined %}
+    unicast_peer {
+{% for peer in item.unicast_peers %}
+        {{ peer }}
+{% endfor %}
+    }
+    unicast_fault_no_peer
+{% endif %}
+    virtual_router_id {{ item.virtual_router_id | default(51, true) }}
+    priority {{ item.priority }}
+    advert_int {{ item.advert_int | default(1, true) }}
+{% if item.auth_type is defined %}
+    authentication {
+        auth_type {{ item.auth_type }}
+{% if item.auth_pass is defined %}
+        auth_pass {{ item.auth_pass }}
+{% endif %}
+    }
+{% endif %}
+    virtual_ipaddress {
+{% if item.virtual_ipaddress is string %}
+        {{ item.virtual_ipaddress }}
+{% elif item.virtual_ipaddress is iterable %}
+{% for ip in item.virtual_ipaddress %}
+        {{ ip }}
+{% endfor %}
+{% endif %}
+    }
+{% if item.accept | default(false) %}
+    accept
+{% endif %}
+{% if item.no_accept | default(false) %}
+    no_accept
+{% endif %}
+{% if item.strict_mode is defined %}
+    strict_mode {{ item.strict_mode | to_json }}
+{% endif %}
+}
