@@ -11,11 +11,12 @@
   notify: save iptables
   tags:
     - firewall
+    - iptables
     - update
 
-- name: Reset firewall to installation defaults
+- name: Reset default policies and flush all rules
   block:
-    - name: Set default policy to allow
+    - name: Set default policy for accept traffic
       ansible.builtin.iptables:
         chain: '{{ item }}'
         policy: ACCEPT
@@ -25,30 +26,36 @@
         - OUTPUT
       notify: save iptables
 
-    - name: Flush all firewall rules
+    - name: Flush all rules
       ansible.builtin.iptables:
         flush: true
       notify: save iptables
-  when: firewall_reset
-  tags: firewall
+  when: iptables_reset
+  tags:
+    - firewall
+    - iptables
 
-- name: Allow incoming loopback connections
+- name: Allow incoming loopback traffic
   ansible.builtin.iptables:
     chain: INPUT
     in_interface: lo
     jump: ACCEPT
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
-- name: Allow outgoing loopback connections
+- name: Allow outgoing loopback traffic
   ansible.builtin.iptables:
     chain: OUTPUT
     out_interface: lo
     jump: ACCEPT
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
-- name: Allow established and related incoming connections
+- name: Allow incoming established and related traffic
   ansible.builtin.iptables:
     chain: INPUT
     ctstate:
@@ -56,15 +63,19 @@
       - RELATED
     jump: ACCEPT
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
-- name: Allow established outgoing connections
+- name: Allow outgoing established traffic
   ansible.builtin.iptables:
     chain: OUTPUT
     ctstate: ESTABLISHED
     jump: ACCEPT
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
 - name: Drop invalid packets
   ansible.builtin.iptables:
@@ -75,9 +86,11 @@
     - INPUT
     - FORWARD
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
-- name: Allow incoming and outgoing SSH connections
+- name: Allow incoming and outgoing SSH traffic
   ansible.builtin.iptables:
     chain: '{{ item }}'
     protocol: tcp
@@ -90,25 +103,33 @@
     - INPUT
     - OUTPUT
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
 - name: Set default policy for outgoing traffic
   ansible.builtin.iptables:
     chain: OUTPUT
-    policy: '{{ firewall_output }}'
+    policy: '{{ iptables_policy_output }}'
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
 - name: Set default policy for forwarding traffic
   ansible.builtin.iptables:
     chain: FORWARD
-    policy: '{{ firewall_forward }}'
+    policy: '{{ iptables_policy_forward }}'
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables
 
 - name: Set default policy for incoming traffic
   ansible.builtin.iptables:
     chain: INPUT
-    policy: '{{ firewall_input }}'
+    policy: '{{ iptables_policy_input }}'
   notify: save iptables
-  tags: firewall
+  tags:
+    - firewall
+    - iptables

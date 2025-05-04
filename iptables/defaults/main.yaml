@@ -11,16 +11,16 @@ apt_update_latest: true
 
 # The default policy for forwarding traffic.
 # Options: 'ACCEPT', 'DROP', 'QUEUE', 'RETURN'
-firewall_forward: DROP
+iptables_policy_forward: DROP
 
 # The default policy for incoming traffic.
 # Options: 'ACCEPT', 'DROP', 'QUEUE', 'RETURN'
-firewall_input: DROP
+iptables_policy_input: DROP
 
 # The default policy for outgoing traffic.
 # Options: 'ACCEPT', 'DROP', 'QUEUE', 'RETURN'
-firewall_output: ACCEPT
+iptables_policy_output: ACCEPT
 
-# Reset firewall to installation defaults.
+# Reset default policies and flush all rules.
 # Useful as a command-line override to reconfigure firewall rules.
-firewall_reset: false
+iptables_reset: false
