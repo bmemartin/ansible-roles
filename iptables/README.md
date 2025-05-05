@@ -23,7 +23,6 @@ Available configuration options, along with default values, are documented in [d
 
 | Tag | Description |
 | --- | ----------- |
-| firewall | All tasks |
 | iptables | All tasks |
 | update | Update all components |
 

@@ -10,7 +10,6 @@
     cache_valid_time: '{{ apt_cache_valid_time }}'
   notify: save iptables
   tags:
-    - firewall
     - iptables
     - update
 
@@ -31,9 +30,7 @@
         flush: true
       notify: save iptables
   when: iptables_reset
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Allow incoming loopback traffic
   ansible.builtin.iptables:
@@ -41,9 +38,7 @@
     in_interface: lo
     jump: ACCEPT
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Allow outgoing loopback traffic
   ansible.builtin.iptables:
@@ -51,9 +46,7 @@
     out_interface: lo
     jump: ACCEPT
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Allow incoming established and related traffic
   ansible.builtin.iptables:
@@ -63,9 +56,7 @@
       - RELATED
     jump: ACCEPT
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Allow outgoing established traffic
   ansible.builtin.iptables:
@@ -73,9 +64,7 @@
     ctstate: ESTABLISHED
     jump: ACCEPT
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Drop invalid packets
   ansible.builtin.iptables:
@@ -86,9 +75,7 @@
     - INPUT
     - FORWARD
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Allow incoming and outgoing SSH traffic
   ansible.builtin.iptables:
@@ -103,33 +90,25 @@
     - INPUT
     - OUTPUT
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Set default policy for outgoing traffic
   ansible.builtin.iptables:
     chain: OUTPUT
     policy: '{{ iptables_policy_output }}'
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Set default policy for forwarding traffic
   ansible.builtin.iptables:
     chain: FORWARD
     policy: '{{ iptables_policy_forward }}'
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
 
 - name: Set default policy for incoming traffic
   ansible.builtin.iptables:
     chain: INPUT
     policy: '{{ iptables_policy_input }}'
   notify: save iptables
-  tags:
-    - firewall
-    - iptables
+  tags: iptables
