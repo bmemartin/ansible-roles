@@ -15,7 +15,6 @@ A collection of Ansible roles for automating host configuration and application 
 - [Reboot](reboot/README.md)
 - [SSH](ssh/README.md)
 - [Time](time/README.md)
-- [UFW](ufw/README.md)
 - [Unbound](unbound/README.md)
 
 ## 🚀 Deployed On
