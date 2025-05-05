@@ -2,6 +2,9 @@
 
 [iptables](https://www.netfilter.org/projects/iptables/index.html) is the userspace command line program used to configure the Linux 2.4.x and later packet filtering ruleset.
 
+> [!NOTE]
+> IPv6 support is limited to the configuration of default policy rules.
+
 ## 🚀 Usage
 
 Minimal Ansible playbook

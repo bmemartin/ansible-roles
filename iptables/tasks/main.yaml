@@ -15,19 +15,43 @@
 
 - name: Reset default policies and flush all rules
   block:
-    - name: Set default policy for accept traffic
+    - name: Set default policy to allow incoming traffic
       ansible.builtin.iptables:
-        chain: '{{ item }}'
+        ip_version: '{{ item }}'
+        chain: INPUT
         policy: ACCEPT
       loop:
-        - INPUT
-        - FORWARD
-        - OUTPUT
+        - ipv4
+        - ipv6
+      notify: save iptables
+
+    - name: Set default policy to allow forwarding traffic
+      ansible.builtin.iptables:
+        ip_version: '{{ item }}'
+        chain: FORWARD
+        policy: ACCEPT
+      loop:
+        - ipv4
+        - ipv6
+      notify: save iptables
+
+    - name: Set default policy to allow outgoing traffic
+      ansible.builtin.iptables:
+        ip_version: '{{ item }}'
+        chain: OUTPUT
+        policy: ACCEPT
+      loop:
+        - ipv4
+        - ipv6
       notify: save iptables
 
     - name: Flush all rules
       ansible.builtin.iptables:
+        ip_version: '{{ item }}'
         flush: true
+      loop:
+        - ipv4
+        - ipv6
       notify: save iptables
   when: iptables_reset
   tags: iptables
@@ -94,21 +118,33 @@
 
 - name: Set default policy for outgoing traffic
   ansible.builtin.iptables:
+    ip_version: '{{ item }}'
     chain: OUTPUT
     policy: '{{ iptables_policy_output }}'
+  loop:
+    - ipv4
+    - ipv6
   notify: save iptables
   tags: iptables
 
 - name: Set default policy for forwarding traffic
   ansible.builtin.iptables:
+    ip_version: '{{ item }}'
     chain: FORWARD
     policy: '{{ iptables_policy_forward }}'
+  loop:
+    - ipv4
+    - ipv6
   notify: save iptables
   tags: iptables
 
 - name: Set default policy for incoming traffic
   ansible.builtin.iptables:
+    ip_version: '{{ item }}'
     chain: INPUT
     policy: '{{ iptables_policy_input }}'
+  loop:
+    - ipv4
+    - ipv6
   notify: save iptables
   tags: iptables
