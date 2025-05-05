@@ -16,9 +16,6 @@ pihole_config:
     # The configuration value (HTTPS).
     value: 443s,[::]:443s
 
-# Define the required firewall rules in iptables.
-pihole_firewall_iptables: true
-
 # The list of errors to ignore during installation.
 pihole_install_ignore_errors:
   - 'Failed to stop pihole-FTL.service: Unit pihole-FTL.service not loaded.'
