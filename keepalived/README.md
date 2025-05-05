@@ -28,5 +28,3 @@ Available configuration options, along with default values, are documented in [d
 | Tag | Description |
 | --- | ----------- |
 | keepalived | All tasks |
-| firewall | Applies the firewall rule tasks |
-| iptables | Applies the iptables rule tasks |

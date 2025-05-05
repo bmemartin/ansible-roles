@@ -9,9 +9,6 @@ apt_update_cache: true
 # Ensure that the latest package version is installed.
 apt_update_latest: true
 
-# Define the required firewall rules in iptables.
-keepalived_firewall_iptables: true
-
 # The list of VRRP instances to be configured.
 keepalived_vrrp_instances:
     # Accept packets to non address-owner.
