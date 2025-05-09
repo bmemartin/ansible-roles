@@ -42,4 +42,5 @@
 - name: Apply configuration options
   include_tasks: config.yaml
   loop: '{{ pihole_config | default([], true) }}'
+  no_log: true
   tags: pihole
