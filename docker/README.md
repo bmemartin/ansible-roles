@@ -25,11 +25,3 @@ Available configuration options, along with default values, are documented in [d
 | --- | ----------- |
 | docker | All tasks |
 | update | Update all components |
-
-## ⌨️ Command-line Interface
-
-Review the Docker CLI documentation
-
-```shell
-docker --help
-```
