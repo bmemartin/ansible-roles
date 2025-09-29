@@ -28,11 +28,3 @@ Available configuration options, along with default values, are documented in [d
 | --- | ----------- |
 | iptables | All tasks |
 | update | Update all components |
-
-## ⌨️ Command-line Interface
-
-Review the iptables CLI documentation
-
-```shell
-iptables --help
-```
