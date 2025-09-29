@@ -25,11 +25,3 @@ Available configuration options, along with default values, are documented in [d
 | --- | ----------- |
 | kubectl | All tasks |
 | update | Update all components |
-
-## ⌨️ Command-line Interface
-
-Review the kubectl CLI documentation
-
-```shell
-kubectl --help
-```
