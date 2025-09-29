@@ -25,15 +25,3 @@ Available configuration options, along with default values, are documented in [d
 | --- | ----------- |
 | pihole   | All tasks |
 | update   | Update all components |
-
-## ⌨️ Command-line Interface
-
-Review the Pi-hole CLI documentation
-
-```shell
-pihole --help
-```
-
-```shell
-pihole-FTL --help
-```
