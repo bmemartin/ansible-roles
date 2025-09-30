@@ -1,0 +1,53 @@
+---
+
+- name: Check mutually exclusive keys
+  ansible.builtin.fail:
+    msg: "Multiple mutually exclusive keys were defined"
+  when: >
+    (item.src is defined and item.content is defined) or
+    (item.src is defined and item.template is defined) or
+    (item.content is defined and item.template is defined)
+
+- name: Create directory
+  ansible.builtin.file:
+    name: '{{ docker_compose_path }}/{{ item.dest }}'
+    state: directory
+    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
+    group: '{{ item.group | default(docker_compose_group, true) }}'
+    mode: "{{ item.mode | default('0755', true) }}"
+  when: item.src is not defined and item.content is not defined and item.template is not defined
+  notify: docker compose recreate
+  tags: docker_compose
+
+- name: Copy file or directory
+  ansible.builtin.copy:
+    src: '{{ item.src }}'
+    dest: '{{ docker_compose_path }}/{{ item.dest }}'
+    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
+    group: '{{ item.group | default(docker_compose_group, true) }}'
+    mode: "{{ item.mode | default('preserve', true) }}"
+  when: item.src is defined
+  notify: docker compose recreate
+  tags: docker_compose
+
+- name: Create file from content
+  ansible.builtin.copy:
+    content: '{{ item.content }}'
+    dest: '{{ docker_compose_path }}/{{ item.dest }}'
+    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
+    group: '{{ item.group | default(docker_compose_group, true) }}'
+    mode: "{{ item.mode | default('0400', true) }}"
+  when: item.content is defined
+  notify: docker compose recreate
+  tags: docker_compose
+
+- name: Create file from template
+  ansible.builtin.template:
+    src: '{{ item.template }}'
+    dest: '{{ docker_compose_path }}/{{ item.dest }}'
+    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
+    group: '{{ item.group | default(docker_compose_group, true) }}'
+    mode: "{{ item.mode | default('0400', true) }}"
+  when: item.template is defined
+  notify: docker compose recreate
+  tags: docker_compose

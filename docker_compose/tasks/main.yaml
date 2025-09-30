@@ -7,9 +7,7 @@
     owner: '{{ docker_compose_owner }}'
     group: '{{ docker_compose_group }}'
     mode: 0755
-  notify:
-    - docker compose force recreate
-    - docker prune
+  notify: docker compose recreate
   tags: docker_compose
 
 - name: Create docker compose file
@@ -19,73 +17,14 @@
     owner: '{{ docker_compose_owner }}'
     group: '{{ docker_compose_group }}'
     mode: 0644
-  notify:
-    - docker compose force recreate
-    - docker prune
+  notify: docker compose recreate
   tags: docker_compose
 
-- name: Create directory
-  ansible.builtin.file:
-    name: '{{ docker_compose_path }}/{{ item.dest }}'
-    state: directory
-    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
-    group: '{{ item.group | default(docker_compose_group, true) }}'
-    mode: "{{ item.mode | default('0755', true) }}"
-  when: item.src is not defined and item.content is not defined and item.template is not defined
+- name: Create additional files and directories
+  include_tasks: files.yaml
   loop: '{{ docker_compose_files | default([], true) }}'
   loop_control:
     label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify:
-    - docker compose force recreate
-    - docker prune
-  tags: docker_compose
-
-- name: Copy file or directory
-  ansible.builtin.copy:
-    src: '{{ item.src }}'
-    dest: '{{ docker_compose_path }}/{{ item.dest }}'
-    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
-    group: '{{ item.group | default(docker_compose_group, true) }}'
-    mode: "{{ item.mode | default('preserve', true) }}"
-  when: item.src is defined
-  loop: '{{ docker_compose_files | default([], true) }}'
-  loop_control:
-    label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify:
-    - docker compose force recreate
-    - docker prune
-  tags: docker_compose
-
-- name: Create file from content
-  ansible.builtin.copy:
-    content: '{{ item.content }}'
-    dest: '{{ docker_compose_path }}/{{ item.dest }}'
-    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
-    group: '{{ item.group | default(docker_compose_group, true) }}'
-    mode: "{{ item.mode | default('0400', true) }}"
-  when: item.content is defined
-  loop: '{{ docker_compose_files | default([], true) }}'
-  loop_control:
-    label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify:
-    - docker compose force recreate
-    - docker prune
-  tags: docker_compose
-
-- name: Create file from template
-  ansible.builtin.template:
-    src: '{{ item.template }}'
-    dest: '{{ docker_compose_path }}/{{ item.dest }}'
-    owner: '{{ item.owner | default(docker_compose_owner, true) }}'
-    group: '{{ item.group | default(docker_compose_group, true) }}'
-    mode: "{{ item.mode | default('0400', true) }}"
-  when: item.template is defined
-  loop: '{{ docker_compose_files | default([], true) }}'
-  loop_control:
-    label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
-  notify:
-    - docker compose force recreate
-    - docker prune
   tags: docker_compose
 
 - name: Create docker network
@@ -93,15 +32,14 @@
     name: '{{ item }}'
     state: present
   loop: '{{ docker_compose_networks | default([], true) }}'
-  notify:
-    - docker compose force recreate
-    - docker prune
+  notify: docker compose recreate
   tags: docker_compose
 
-- name: Trigger `docker compose up`
-  command: /bin/true
-  when: "'docker_compose_up' in ansible_run_tags"
-  notify:
-    - docker compose up
-    - docker prune
-  tags: docker_compose_up
+- name: Apply docker compose project
+  community.docker.docker_compose_v2:
+    project_src: '{{ docker_compose_path }}'
+    state: '{{ docker_compose_state }}'
+    pull: '{{ docker_compose_pull }}'
+    recreate: '{{ docker_compose_recreate }}'
+  register: docker_compose_output
+  tags: docker_compose

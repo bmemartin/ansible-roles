@@ -4,18 +4,15 @@
 docker_compose_file: docker-compose.yaml
 
 # A list of additional files and directories to establish on the remote server.
-# - Include `src` to copy a file or directory
-# - Include `content` to create a file with the specified content
-# - Include `template` to create a file from the specified template
-# - Exclude `src`, `content`, and `template` to create a directory
+# Mutually exclusive keys: 'src', 'content', 'template'
 docker_compose_files:
-    # The local path to a file or directory.
+    # The local path to a file or directory to be copied.
 # - src:
 
-    # The contents of the file.
+    # The raw contents of the file to be created.
 #   content:
 
-    # The local path of a Jinja2 formatted template.
+    # The local path of a Jinja2 formatted template to use when creating the file.
 #   template:
 
     # The remote relative path to the project directory.
@@ -33,7 +30,7 @@ docker_compose_files:
 # The name of the group to own the project files and directories.
 docker_compose_group: '{{ ansible_user }}'
 
-# A list of docker networks to be additionally created.
+# A list of docker networks to be created.
 docker_compose_networks:
 
 # The name of the user to own the project files and directories.
@@ -50,32 +47,6 @@ docker_compose_pull: policy
 # Options: 'always', 'never', 'auto'
 docker_compose_recreate: auto
 
-# Prune the builder cache after changes are detected.
-docker_prune_builder_cache: false
-
-# A dictionary of filter values used for selecting images to delete.
-docker_prune_builder_cache_filters:
-
-# Prune containers after changes are detected.
-docker_prune_containers: false
-
-# A dictionary of filter values used for selecting containers to delete.
-docker_prune_containers_filters:
-
-# Prune images after changes are detected.
-docker_prune_images: false
-
-# A dictionary of filter values used for selecting images to delete.
-docker_prune_images_filters:
-
-# Prune networks after changes are detected.
-docker_prune_networks: false
-
-# A dictionary of filter values used for selecting networks to delete.
-docker_prune_networks_filters:
-
-# Prune volumes after changes are detected.
-docker_prune_volumes: false
-
-# A dictionary of filter values used for selecting volumes to delete.
-docker_prune_volumes_filters:
+# The desired state of the containers.
+# Options: 'present', 'stopped', 'absent', 'restarted'
+docker_compose_state: present

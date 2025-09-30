@@ -1,6 +1,6 @@
 # Docker Compose
 
-Docker Compose is a collection of tasks that establishes, and starts, a [Compose](https://docs.docker.com/compose) project on the target host(s).
+Docker Compose is a collection of tasks that defines and runs a [Compose](https://docs.docker.com/compose) project on the target host(s).
 
 ## 🚀 Usage
 
@@ -16,6 +16,12 @@ Minimal Ansible playbook
         docker_compose_path: /project
 ```
 
+> [!TIP]
+> Use `--extra-vars docker_compose_pull=always` at runtime to ensure images are refreshed during upgrades, especially when relying on tags like `latest`.
+
+> [!TIP]
+> Use `--extra-vars docker_compose_recreate=always` at runtime to ensure project containers are always recreated.
+
 ### Configuration
 
 Available configuration options, along with default values, are documented in [defaults/main.yaml](defaults/main.yaml).
@@ -25,4 +31,3 @@ Available configuration options, along with default values, are documented in [d
 | Tag | Description |
 | --- | ----------- |
 | docker_compose | All tasks |
-| docker_compose_up | Recreate containers even if their configuration and image haven't changed. It must be explicitly specified to activate. |
