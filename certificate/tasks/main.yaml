@@ -1,0 +1,30 @@
+---
+
+- name: Create project directory
+  ansible.builtin.file:
+    name: '{{ certificate_path }}'
+    state: directory
+    owner: '{{ certificate_owner }}'
+    group: '{{ certificate_group }}'
+    mode: 0755
+  tags: certificate
+
+- name: Generate openssl private key
+  community.crypto.openssl_privatekey:
+    path: '{{ certificate_path }}/server.key'
+    state: present
+    owner: '{{ certificate_owner }}'
+    group: '{{ certificate_group }}'
+    mode: 0400
+  tags: certificate
+
+- name: Generate openssl certificate
+  community.crypto.x509_certificate:
+    path: '{{ certificate_path }}/server.crt'
+    privatekey_path: '{{ certificate_path }}/server.key'
+    provider: selfsigned
+    state: present
+    owner: '{{ certificate_owner }}'
+    group: '{{ certificate_group }}'
+    mode: 0400
+  tags: certificate
