@@ -1,5 +1,23 @@
 ---
 
+- name: Collect information on the docker compose file
+  ansible.builtin.stat:
+    path: '{{ docker_compose_file }}'
+  become: false
+  delegate_to: localhost
+  run_once: true
+  register: docker_compose_file_info
+  tags: docker_compose
+
+- name: Assert the docker compose file exists
+  ansible.builtin.assert:
+    that:
+      - docker_compose_file_info.stat.exists
+      - docker_compose_file_info.stat.isreg
+    fail_msg: "The variable 'docker_compose_file' must point to an existing file."
+    quiet: true
+  tags: docker_compose
+
 - name: Create project directory
   ansible.builtin.file:
     name: '{{ docker_compose_path }}'
