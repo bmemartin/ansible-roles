@@ -5,6 +5,7 @@
     that: certificate_path
     fail_msg: "The required variable 'certificate_path' must be defined and non-empty."
     quiet: true
+  tags: certificate
 
 - name: Create project directory
   ansible.builtin.file:
