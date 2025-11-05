@@ -1,6 +1,6 @@
 # Certificate
 
-Certificate is a collection of tasks that generates openssl certificates on the host.
+Certificate is a collection of tasks that generates OpenSSL certificates on the host.
 
 ## 🚀 Usage
 
