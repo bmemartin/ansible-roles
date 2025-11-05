@@ -33,12 +33,22 @@
   register: docker_gpg_key
   tags: docker
 
+- name: Determine APT repository architecture
+  vars:
+    arch_map:
+      x86_64: amd64
+      aarch64: arm64
+      armv7l: armhf
+      armv6l: armhf
+      ppc64le: ppc64el
+  set_fact:
+    apt_arch: '{{ arch_map[ansible_architecture] | default(ansible_architecture) }}'
+
 - name: Add repository to sources list
   ansible.builtin.apt_repository:
-    repo: 'deb [arch=amd64 signed-by={{ docker_gpg_key.dest }}] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
+    repo: 'deb [arch={{ apt_arch }} signed-by={{ docker_gpg_key.dest }}] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
     state: present
     filename: docker
-  when: ansible_architecture == 'x86_64'
   tags: docker
 
 - name: Install Docker
