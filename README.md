@@ -16,6 +16,7 @@ A collection of Ansible roles for automating host configuration and application 
 - [Netplan](netplan/README.md)
 - [Packages](packages/README.md)
 - [Pi-hole](pihole/README.md)
+- [PostgreSQL](postgresql/README.md)
 - [Reboot](reboot/README.md)
 - [SSH](ssh/README.md)
 - [Time](time/README.md)

@@ -1,0 +1,38 @@
+---
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+    state: present
+    update_cache: '{{ apt_update_cache }}'
+    cache_valid_time: '{{ apt_cache_valid_time }}'
+  tags: postgresql
+
+- name: Download official GPG key
+  ansible.builtin.get_url:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    dest: /etc/apt/keyrings/postgresql.asc
+    owner: root
+    group: root
+    mode: 0644
+  register: postgresql_gpg_key
+  tags: postgresql
+
+- name: Add repository to sources list
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by={{ postgresql_gpg_key.dest }}] https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main'
+    state: present
+    filename: pgdg
+  when: ansible_architecture == 'x86_64'
+  tags: postgresql
+
+- name: Install PostgreSQL
+  ansible.builtin.apt:
+    name: 'postgresql-{{ postgresql_version }}'
+    state: "{{ 'latest' if apt_update_latest else 'present' }}"
+    update_cache: true
+  tags:
+    - postgresql
+    - update
