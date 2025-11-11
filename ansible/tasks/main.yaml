@@ -17,7 +17,7 @@
   become_user: '{{ pipx_user }}'
   register: _pipx_ensurepath_result
   failed_when: _pipx_ensurepath_result.rc != 0 or 'not added' in _pipx_ensurepath_result.stdout
-  changed_when: "'success' in _pipx_ensurepath_result.stdout | lower"
+  changed_when: "'success' in (_pipx_ensurepath_result.stdout | lower)"
   tags: ansible
 
 - name: Install Ansible via pipx
