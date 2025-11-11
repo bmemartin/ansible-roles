@@ -1,16 +1,15 @@
 ---
 
-- name: Check mutually exclusive keys
+- name: Fail if multiple mutually exclusive keys are defined
   ansible.builtin.fail:
-    msg: "Multiple mutually exclusive keys were defined"
+    msg: "Only one of 'src', 'content', or 'template' can be defined per item."
   when: >
-    (item.src is defined and item.content is defined) or
-    (item.src is defined and item.template is defined) or
-    (item.content is defined and item.template is defined)
+    ([item.src, item.content, item.template] | select('defined') | length) > 1
+  tags: docker_compose
 
 - name: Create directory
   ansible.builtin.file:
-    name: '{{ docker_compose_path }}/{{ item.dest }}'
+    path: '{{ docker_compose_path }}/{{ item.dest }}'
     state: directory
     owner: '{{ item.owner | default(docker_compose_owner, true) }}'
     group: '{{ item.group | default(docker_compose_group, true) }}'
@@ -26,6 +25,7 @@
     owner: '{{ item.owner | default(docker_compose_owner, true) }}'
     group: '{{ item.group | default(docker_compose_group, true) }}'
     mode: "{{ item.mode | default('preserve', true) }}"
+    force: true
   when: item.src is defined
   notify: docker compose recreate
   tags: docker_compose
@@ -37,6 +37,7 @@
     owner: '{{ item.owner | default(docker_compose_owner, true) }}'
     group: '{{ item.group | default(docker_compose_group, true) }}'
     mode: "{{ item.mode | default('0400', true) }}"
+    force: true
   when: item.content is defined
   notify: docker compose recreate
   tags: docker_compose
@@ -48,6 +49,7 @@
     owner: '{{ item.owner | default(docker_compose_owner, true) }}'
     group: '{{ item.group | default(docker_compose_group, true) }}'
     mode: "{{ item.mode | default('0400', true) }}"
+    force: true
   when: item.template is defined
   notify: docker compose recreate
   tags: docker_compose

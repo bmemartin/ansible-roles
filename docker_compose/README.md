@@ -18,8 +18,7 @@ Minimal Ansible playbook
 
 > [!TIP]
 > Use `--extra-vars docker_compose_pull=always` at runtime to ensure images are refreshed during upgrades, especially when relying on tags like `latest`.
-
-> [!TIP]
+>
 > Use `--extra-vars docker_compose_recreate=always` at runtime to ensure project containers are always recreated.
 
 ### Configuration

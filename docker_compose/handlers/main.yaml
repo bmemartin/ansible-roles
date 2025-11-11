@@ -6,4 +6,4 @@
     state: '{{ docker_compose_state }}'
     pull: '{{ docker_compose_pull }}'
     recreate: always
-  when: not docker_compose_output.changed
+  when: docker_compose_output is not defined or not docker_compose_output.changed

@@ -24,7 +24,7 @@
     state: directory
     owner: '{{ docker_compose_owner }}'
     group: '{{ docker_compose_group }}'
-    mode: 0755
+    mode: '0755'
   notify: docker compose recreate
   tags: docker_compose
 
@@ -34,7 +34,7 @@
     dest: '{{ docker_compose_path }}/docker-compose.yaml'
     owner: '{{ docker_compose_owner }}'
     group: '{{ docker_compose_group }}'
-    mode: 0644
+    mode: '0644'
   notify: docker compose recreate
   tags: docker_compose
 
