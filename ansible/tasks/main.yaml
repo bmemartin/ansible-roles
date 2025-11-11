@@ -1,6 +1,6 @@
 ---
 
-- name: Install required packages
+- name: Ensure required packages are installed
   ansible.builtin.apt:
     name:
       - python3
@@ -11,14 +11,16 @@
     cache_valid_time: '{{ apt_cache_valid_time }}'
   tags: ansible
 
-- name: Add pipx directories to PATH
+- name: Ensure pipx user path is configured
   ansible.builtin.command:
     cmd: pipx ensurepath
   become_user: '{{ pipx_user }}'
-  changed_when: false
+  register: _pipx_ensurepath_result
+  failed_when: _pipx_ensurepath_result.rc != 0 or 'not added' in _pipx_ensurepath_result.stdout
+  changed_when: "'success' in _pipx_ensurepath_result.stdout | lower"
   tags: ansible
 
-- name: Install Ansible
+- name: Install Ansible via pipx
   community.general.pipx:
     name: ansible
     state: "{{ 'latest' if pipx_update_latest else 'present' }}"
