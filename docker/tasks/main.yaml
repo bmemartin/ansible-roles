@@ -1,6 +1,6 @@
 ---
 
-- name: Uninstall conflicting packages
+- name: Ensure conflicting packages are not installed
   ansible.builtin.apt:
     name:
       - docker.io
@@ -11,9 +11,10 @@
       - containerd
       - runc
     state: absent
+    purge: true
   tags: docker
 
-- name: Install required packages
+- name: Ensure prerequisite packages are installed
   ansible.builtin.apt:
     name:
       - ca-certificates
@@ -23,14 +24,23 @@
     cache_valid_time: '{{ apt_cache_valid_time }}'
   tags: docker
 
-- name: Download official GPG key
+- name: Ensure keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: docker
+
+- name: Download official Docker GPG key
   ansible.builtin.get_url:
-    url: 'https://download.docker.com/linux/ubuntu/gpg'
+    url: https://download.docker.com/linux/ubuntu/gpg
     dest: /etc/apt/keyrings/docker.asc
     owner: root
     group: root
-    mode: 0644
-  register: docker_gpg_key
+    mode: '0644'
+    force: false
   tags: docker
 
 - name: Determine APT repository architecture
@@ -41,17 +51,18 @@
       armv7l: armhf
       armv6l: armhf
       ppc64le: ppc64el
-  set_fact:
+  ansible.builtin.set_fact:
     apt_arch: '{{ arch_map[ansible_architecture] | default(ansible_architecture) }}'
+  tags: docker
 
-- name: Add repository to sources list
+- name: Add Docker repository
   ansible.builtin.apt_repository:
-    repo: 'deb [arch={{ apt_arch }} signed-by={{ docker_gpg_key.dest }}] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
+    repo: 'deb [arch={{ apt_arch }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
     state: present
     filename: docker
   tags: docker
 
-- name: Install Docker
+- name: Install Docker packages
   ansible.builtin.apt:
     name:
       - docker-ce
@@ -65,11 +76,12 @@
     - docker
     - update
 
-- name: Enable Docker on boot
+- name: Enable Docker services on boot
   ansible.builtin.systemd_service:
-    name: '{{ item }}.service'
+    name: '{{ item }}'
+    state: started
     enabled: true
   loop:
-    - docker
-    - containerd
+    - docker.service
+    - containerd.service
   tags: docker
