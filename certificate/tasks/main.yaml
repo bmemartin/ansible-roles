@@ -1,6 +1,6 @@
 ---
 
-- name: Assert required variables
+- name: Assert required variables are defined and valid
   ansible.builtin.assert:
     that: certificate_path
     fail_msg: "The required variable 'certificate_path' must be defined and non-empty."
@@ -16,7 +16,7 @@
     mode: 0755
   tags: certificate
 
-- name: Generate openssl private key
+- name: Generate OpenSSL private key
   community.crypto.openssl_privatekey:
     path: '{{ certificate_path }}/server.key'
     state: present
@@ -25,7 +25,7 @@
     mode: 0400
   tags: certificate
 
-- name: Generate openssl certificate
+- name: Generate self-signed certificate
   community.crypto.x509_certificate:
     path: '{{ certificate_path }}/server.crt'
     privatekey_path: '{{ certificate_path }}/server.key'
