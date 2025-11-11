@@ -13,7 +13,8 @@
     state: directory
     owner: '{{ certificate_owner }}'
     group: '{{ certificate_group }}'
-    mode: 0755
+    mode: '0755'
+    recurse: true
   tags: certificate
 
 - name: Generate OpenSSL private key
@@ -22,7 +23,7 @@
     state: present
     owner: '{{ certificate_owner }}'
     group: '{{ certificate_group }}'
-    mode: 0400
+    mode: '0400'
   tags: certificate
 
 - name: Generate self-signed certificate
@@ -33,5 +34,5 @@
     state: present
     owner: '{{ certificate_owner }}'
     group: '{{ certificate_group }}'
-    mode: 0400
+    mode: '0400'
   tags: certificate
