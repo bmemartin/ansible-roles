@@ -1,0 +1,29 @@
+---
+
+- name: Reset iptables policies and flush rules
+  block:
+    - name: Set default policy to ACCEPT for INPUT, FORWARD, OUTPUT
+      ansible.builtin.iptables:
+        ip_version: '{{ item.ip_version }}'
+        chain: '{{ item.chain }}'
+        policy: ACCEPT
+      loop:
+        - { ip_version: ipv4, chain: INPUT }
+        - { ip_version: ipv6, chain: INPUT }
+        - { ip_version: ipv4, chain: FORWARD }
+        - { ip_version: ipv6, chain: FORWARD }
+        - { ip_version: ipv4, chain: OUTPUT }
+        - { ip_version: ipv6, chain: OUTPUT }
+
+    - name: Flush all iptables rules
+      ansible.builtin.iptables:
+        ip_version: '{{ item }}'
+        flush: true
+      loop:
+        - ipv4
+        - ipv6
+  when: iptables_reset
+  notify:
+    - save iptables rules
+    - save ip6tables rules
+  tags: iptables

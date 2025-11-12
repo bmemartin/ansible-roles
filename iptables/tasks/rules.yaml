@@ -1,0 +1,55 @@
+---
+
+- name: Configure base iptables rules
+  block:
+    - name: Allow incoming loopback traffic
+      ansible.builtin.iptables:
+        chain: INPUT
+        in_interface: lo
+        jump: ACCEPT
+
+    - name: Allow outgoing loopback traffic
+      ansible.builtin.iptables:
+        chain: OUTPUT
+        out_interface: lo
+        jump: ACCEPT
+
+    - name: Allow established and related traffic
+      ansible.builtin.iptables:
+        chain: INPUT
+        ctstate:
+          - ESTABLISHED
+          - RELATED
+        jump: ACCEPT
+
+    - name: Allow established outgoing traffic
+      ansible.builtin.iptables:
+        chain: OUTPUT
+        ctstate: ESTABLISHED
+        jump: ACCEPT
+
+    - name: Drop invalid packets
+      ansible.builtin.iptables:
+        chain: "{{ item }}"
+        ctstate: INVALID
+        jump: DROP
+      loop:
+        - INPUT
+        - FORWARD
+
+    - name: Allow incoming and outgoing SSH traffic
+      ansible.builtin.iptables:
+        chain: "{{ item }}"
+        protocol: tcp
+        destination_port: ssh
+        ctstate:
+          - NEW
+          - ESTABLISHED
+        jump: ACCEPT
+      loop:
+        - INPUT
+        - OUTPUT
+  notify:
+    - save iptables rules
+    - save ip6tables rules
+  tags: iptables
