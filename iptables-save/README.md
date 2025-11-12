@@ -1,10 +1,12 @@
 # iptables-save
 
-[iptables](https://www.netfilter.org/projects/iptables/index.html)-save is an Ansible handler used to persist iptables rule changes.
+`iptables-save` provides Ansible handlers that persist current IPv4 and IPv6 firewall rules to disk using [iptables-save](https://www.netfilter.org/projects/iptables/index.html) and [ip6tables-save](https://www.netfilter.org/projects/iptables/index.html).
+
+These handlers are typically triggered by other roles or tasks that modify iptables rules, ensuring changes are saved across system reboots.
 
 ## 🚀 Usage
 
-Define the [role dependency](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#using-role-dependencies) in the `meta/main.yaml` file within the role directory.
+Include this role as a [role dependency](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse_roles.html#using-role-dependencies) in your role's `meta/main.yml` file:
 
 ```yaml
 ---
@@ -12,7 +14,7 @@ dependencies:
   - role: iptables-save
 ```
 
-Tasks can trigger the handler by using `notify: save iptables`. For example:
+Then, notify the handler(s) from any task that modifies iptables rules:
 
 ```yaml
 ---
@@ -23,5 +25,7 @@ Tasks can trigger the handler by using `notify: save iptables`. For example:
       - ESTABLISHED
       - RELATED
     jump: ACCEPT
-  notify: save iptables
+  notify:
+    - save iptables rules
+    - save ip6tables rules
 ```
