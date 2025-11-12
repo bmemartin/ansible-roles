@@ -11,10 +11,10 @@ Minimal Ansible playbook
 - hosts: all
   become: true
   gather_facts: true
+  vars:
+    certificate_path: /certs
   roles:
     - role: certificate
-      vars:
-        certificate_path: /certs
 ```
 
 ### Configuration
