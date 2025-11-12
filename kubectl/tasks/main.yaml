@@ -1,51 +1,61 @@
 ---
 
-- name: Get installed version
-  ansible.builtin.shell:
-    cmd: kubectl version --client=true | grep 'Client Version' | cut -d ' ' -f 3
-  register: kubectl_installed
-  changed_when: False
+- name: Get installed kubectl version
+  ansible.builtin.command:
+    cmd: kubectl version --client -o json
+  register: _kubectl_installed
+  failed_when: false
+  changed_when: false
   tags:
     - kubectl
     - update
 
-- name: Get latest version
-  ansible.builtin.uri:
-    url: https://dl.k8s.io/release/stable.txt
-    return_content: true
-  register: kubectl_latest
-  when: kubectl_version | default('', true) | length == 0
-  tags:
-    - kubectl
-    - update
-
-- name: Set targeted version
+- name: Set installed kubectl version
   ansible.builtin.set_fact:
-    kubectl_version: '{{ kubectl_latest.content }}'
-  when: kubectl_version | default('', true) | length == 0
+    _kubectl_installed_version: "{{ (_kubectl_installed.stdout | default('{}', true) | from_json).clientVersion.gitVersion | default('') }}"
   tags:
     - kubectl
     - update
 
-- name: Install kubectl
+- name: Determine target kubectl version
+  block:
+    - name: Get latest kubectl stable version
+      ansible.builtin.uri:
+        url: https://dl.k8s.io/release/stable.txt
+        return_content: true
+      register: _kubectl_latest
+
+    - name: Set kubectl target version
+      ansible.builtin.set_fact:
+        kubectl_version: '{{ _kubectl_latest.content | trim }}'
+  when: kubectl_version is not defined or kubectl_version in [None, '']
+  tags:
+    - kubectl
+    - update
+
+- name: Install kubectl binary
   ansible.builtin.get_url:
     url: 'https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl'
     dest: /usr/local/bin/kubectl
     checksum: 'sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl.sha256'
     owner: root
     group: root
-    mode: 0755
-  register: kubectl_binary
-  when: ansible_architecture == 'x86_64' and kubectl_version != kubectl_installed.stdout
+    mode: '0755'
+  register: _kubectl_binary
+  when:
+    - ansible_architecture == 'x86_64'
+    - kubectl_version != _kubectl_installed_version
   tags:
     - kubectl
     - update
 
-- name: Print changed version
-  debug:
-    msg: 'upgrade {{ kubectl_installed.stdout }} to {{ kubectl_version }}'
-  when: kubectl_installed.stdout | length > 0 and kubectl_binary is changed
-  changed_when: True
+- name: Show kubectl version change
+  ansible.builtin.debug:
+    msg: 'Kubectl version changed from {{ _kubectl_installed_version }} to {{ kubectl_version }}'
+  when:
+    - _kubectl_installed_version | length > 0
+    - _kubectl_binary is changed
+  changed_when: true
   tags:
     - kubectl
     - update
