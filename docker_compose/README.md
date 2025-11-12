@@ -10,10 +10,10 @@ Minimal Ansible playbook
 ---
 - hosts: all
   gather_facts: true
+  vars:
+    docker_compose_path: /project
   roles:
     - role: docker_compose
-      vars:
-        docker_compose_path: /project
 ```
 
 > [!TIP]
