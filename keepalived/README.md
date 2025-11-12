@@ -11,12 +11,15 @@ Minimal Ansible playbook
 - hosts: all
   become: true
   gather_facts: true
+  vars:
+    keepalived_vrrp_instances:
+      - name: demo
+        state: MASTER
+        interface: '{{ ansible_default_ipv4.interface }}'
+        priority: 255
+        virtual_ipaddress: 192.168.0.244/24
   roles:
     - role: keepalived
-      vars:
-        keepalived_vrrp_instances:
-          - name: demo
-            virtual_ipaddress: 192.168.10.10
 ```
 
 ### Configuration
