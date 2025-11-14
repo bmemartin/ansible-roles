@@ -1,11 +1,11 @@
 ---
 
-- name: Set timezone
+- name: Set system timezone
   community.general.timezone:
     name: '{{ timezone }}'
   tags: time
 
-- name: Add NTP to /etc/systemd/timesyncd.conf
+- name: Configure NTP server in timesyncd
   ansible.builtin.lineinfile:
     dest: /etc/systemd/timesyncd.conf
     regexp: '^NTP='
@@ -14,12 +14,12 @@
   notify: restart timesyncd.service
   tags: time
 
-- name: Add fallback NTP to /etc/systemd/timesyncd.conf
+- name: Configure fallback NTP server in timesyncd
   ansible.builtin.lineinfile:
     dest: /etc/systemd/timesyncd.conf
     regexp: '^FallbackNTP='
     line: 'FallbackNTP={{ ntp_fallback }}'
     state: present
-  notify: restart timesyncd.service
   when: ntp_fallback
+  notify: restart timesyncd.service
   tags: time
