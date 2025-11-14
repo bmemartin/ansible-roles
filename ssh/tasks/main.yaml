@@ -8,12 +8,12 @@
     exclusive: '{{ ssh_authorized_keys_exclusive }}'
   tags: ssh
 
-- name: Create sshd_config overrides
+- name: Deploy SSHD configuration overrides
   ansible.builtin.template:
     src: sshd_config.conf.j2
     dest: /etc/ssh/sshd_config.d/99-ansible-settings.conf
-    group: root
     owner: root
-    mode: 0644
+    group: root
+    mode: '0644'
   notify: restart ssh.service
   tags: ssh
