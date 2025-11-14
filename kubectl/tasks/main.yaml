@@ -40,7 +40,9 @@
       aarch64: arm64
   ansible.builtin.set_fact:
     _kubectl_arch: '{{ arch_map[ansible_architecture] | default(ansible_architecture) }}'
-  tags: docker
+  tags:
+    - kubectl
+    - update
 
 - name: Install kubectl binary
   ansible.builtin.get_url:
