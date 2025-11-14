@@ -1,6 +1,6 @@
 ---
 
-- name: Install required packages
+- name: Ensure prerequisite packages are installed
   ansible.builtin.apt:
     name:
       - ca-certificates
@@ -10,22 +10,40 @@
     cache_valid_time: '{{ apt_cache_valid_time }}'
   tags: postgresql
 
-- name: Download official GPG key
+- name: Ensure keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: postgresql
+
+- name: Download official PostgreSQL GPG key
   ansible.builtin.get_url:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
     dest: /etc/apt/keyrings/postgresql.asc
     owner: root
     group: root
-    mode: 0644
-  register: postgresql_gpg_key
+    mode: '0644'
+    force: false
   tags: postgresql
 
-- name: Add repository to sources list
+- name: Determine APT repository architecture
+  vars:
+    arch_map:
+      x86_64: amd64
+      aarch64: arm64
+      ppc64le: ppc64el
+  ansible.builtin.set_fact:
+    _apt_arch: '{{ arch_map[ansible_architecture] | default(ansible_architecture) }}'
+  tags: postgresql
+
+- name: Add PostgreSQL repository
   ansible.builtin.apt_repository:
-    repo: 'deb [arch=amd64 signed-by={{ postgresql_gpg_key.dest }}] https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main'
+    repo: 'deb [arch={{ _apt_arch }} signed-by=/etc/apt/keyrings/postgresql.asc] https://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main'
     state: present
     filename: pgdg
-  when: ansible_architecture == 'x86_64'
   tags: postgresql
 
 - name: Install PostgreSQL
