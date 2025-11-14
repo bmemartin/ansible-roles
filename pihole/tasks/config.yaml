@@ -1,20 +1,22 @@
 ---
 
-- name: Set usable variables
+- name: Set internal configuration variables
   ansible.builtin.set_fact:
-    pck: '{{ item.key }}'
-    pcv: "{% if (item.value | type_debug) == 'list' %}[ {{ item.value | join(', ')}} ]{% else %}{{ item.value }}{% endif %}"
-    pcj: "{% if (item.value | type_debug) == 'list' %}{{ item.value | to_json }}{% else %}{{ item.value }}{% endif %}"
+    _pck: '{{ item.key }}'
+    _pcv: "{% if (item.value | type_debug) == 'list' %}[ {{ item.value | join(', ')}} ]{% else %}{{ item.value }}{% endif %}"
+    _pcj: "{% if (item.value | type_debug) == 'list' %}{{ item.value | to_json }}{% else %}{{ item.value }}{% endif %}"
   tags: pihole
 
-- name: Get configuration - {{ pck }}
-  ansible.builtin.command: pihole-FTL --config {{ pck }}
-  register: piholeftl_config
-  changed_when: False
+- name: Get Pi-hole configuration for {{ _pck }}
+  ansible.builtin.command:
+    cmd: pihole-FTL --config {{ _pck }}
+  register: _piholeftl_config
+  changed_when: false
   tags: pihole
 
-- name: Set configuration - {{ pck }}
-  ansible.builtin.command: pihole-FTL --config {{ pck }} '{{ pcj }}'
-  when: (pcv | string | lower) != (piholeftl_config.stdout | lower)
+- name: Set Pi-hole configuration for {{ _pck }}
+  ansible.builtin.command:
+    cmd: pihole-FTL --config {{ _pck }} '{{ _pcj }}'
+  when: (_pcv | string | lower) != (_piholeftl_config.stdout | lower)
   notify: restart pihole-FTL.service
   tags: pihole
