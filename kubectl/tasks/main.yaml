@@ -33,17 +33,25 @@
     - kubectl
     - update
 
+- name: Determine kubectl architecture
+  vars:
+    arch_map:
+      x86_64: amd64
+      aarch64: arm64
+  ansible.builtin.set_fact:
+    _kubectl_arch: '{{ arch_map[ansible_architecture] | default(ansible_architecture) }}'
+  tags: docker
+
 - name: Install kubectl binary
   ansible.builtin.get_url:
-    url: 'https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl'
+    url: 'https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ _kubectl_arch }}/kubectl'
     dest: /usr/local/bin/kubectl
-    checksum: 'sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl.sha256'
+    checksum: 'sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ _kubectl_arch }}/kubectl.sha256'
     owner: root
     group: root
     mode: '0755'
   register: _kubectl_binary
   when:
-    - ansible_architecture == 'x86_64'
     - kubectl_version != _kubectl_installed_version
   tags:
     - kubectl
