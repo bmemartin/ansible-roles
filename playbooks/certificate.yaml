@@ -1,0 +1,9 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    certificate_path: /certs
+  roles:
+    - role: certificate

@@ -1,0 +1,21 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    docker_compose_path: /docker/nginx
+    docker_compose_file: docker_compose/docker-compose.yaml
+    docker_compose_files:
+      - dest: files
+      - src: docker_compose/src.json
+        dest: files/
+      - content: '{ "success": true }'
+        dest: files/content.json
+      - template: docker_compose/template.j2
+        dest: files/template.json
+    docker_compose_networks:
+      - nginx
+    docker_compose_state: present
+  roles:
+    - role: docker_compose

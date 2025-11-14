@@ -2,7 +2,7 @@
 
 A collection of Ansible roles for automating host configuration and application deployment.
 
-## 📜 Roles
+## 📦 Roles
 
 - [Ansible](ansible/README.md)
 - [Certificate](certificate/README.md)
@@ -22,8 +22,20 @@ A collection of Ansible roles for automating host configuration and application 
 - [Time](time/README.md)
 - [Unbound](unbound/README.md)
 
-## 🚀 Deployed On
+## 🖥️ Platforms
 
 ### [Ubuntu](https://ubuntu.com)
 
 - 24.04 (Noble Numbat)
+
+## ✅ Testing
+
+1. Create the Ansible `hosts` file with the desired host entries.
+
+2. Execute all playbooks with the following command:
+
+    ```shell
+    ANSIBLE_HOST_KEY_CHECKING=false \
+    ANSIBLE_ROLES_PATH=. \
+    ansible-playbook --inventory hosts playbooks/playbook.yaml
+    ```

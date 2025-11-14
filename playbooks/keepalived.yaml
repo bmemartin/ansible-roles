@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    ipv4_octet: "{{ ansible_default_ipv4.address.split('.')[-1] | int }}"
+    keepalived_vrrp_instances:
+      - name: demo
+        state: BACKUP
+        interface: '{{ ansible_default_ipv4.interface }}'
+        priority: '{{ ipv4_octet }}'
+        virtual_ipaddress: '192.168.{{ ipv4_octet }}.{{ ipv4_octet }}/24'
+  roles:
+    - role: keepalived

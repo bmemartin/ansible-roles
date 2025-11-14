@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    unbound_logfile: /var/log/unbound/unbound.log
+    unbound_port: 5335
+  roles:
+    - role: unbound
