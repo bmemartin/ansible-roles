@@ -24,4 +24,4 @@ ssh_password_authentication: false
 
 # Root can log in using SSH.
 # Options: 'yes', 'without-password', 'forced-commands-only', 'no'
-ssh_permit_root_login: 'no'
+ssh_permit_root_login: "no"
