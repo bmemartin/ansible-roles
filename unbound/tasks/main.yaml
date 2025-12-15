@@ -4,8 +4,8 @@
   ansible.builtin.apt:
     name: unbound
     state: "{{ 'latest' if apt_update_latest else 'present' }}"
-    update_cache: '{{ apt_update_cache }}'
-    cache_valid_time: '{{ apt_cache_valid_time }}'
+    update_cache: "{{ apt_update_cache }}"
+    cache_valid_time: "{{ apt_cache_valid_time }}"
   tags:
     - unbound
     - update
@@ -16,7 +16,7 @@
     dest: /etc/unbound/unbound.conf.d/ansible.conf
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   register: _unbound_configuration
   tags: unbound
 
@@ -24,28 +24,28 @@
   block:
     - name: Create Unbound log directory
       ansible.builtin.file:
-        path: '{{ unbound_logfile | dirname }}'
+        path: "{{ unbound_logfile | dirname }}"
         state: directory
         owner: root
         group: root
-        mode: '0755'
+        mode: "0755"
 
     - name: Create Unbound logfile
       ansible.builtin.file:
-        path: '{{ unbound_logfile }}'
+        path: "{{ unbound_logfile }}"
         state: touch
         owner: unbound
         group: unbound
-        mode: '0640'
+        mode: "0640"
         access_time: preserve
         modification_time: preserve
 
     - name: Add logfile to AppArmor profile
       ansible.builtin.lineinfile:
         path: /etc/apparmor.d/local/usr.sbin.unbound
-        line: '{{ unbound_logfile }} rw,'
+        line: "{{ unbound_logfile }} rw,"
         state: present
-        search_string: '{{ unbound_logfile }}'
+        search_string: "{{ unbound_logfile }}"
       register: _unbound_apparmor
 
     - name: Reload AppArmor profile if logfile added
