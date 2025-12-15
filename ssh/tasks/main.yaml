@@ -8,7 +8,7 @@
     exclusive: '{{ ssh_authorized_keys_exclusive }}'
   tags: ssh
 
-- name: Deploy SSHD configuration overrides
+- name: Deploy sshd configuration overrides
   ansible.builtin.template:
     src: sshd_config.conf.j2
     dest: /etc/ssh/sshd_config.d/99-ansible-settings.conf

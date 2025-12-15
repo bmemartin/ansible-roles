@@ -8,16 +8,16 @@ ssh_authorized_keys:
 ssh_authorized_keys_exclusive: false
 
 # Specifies the host key signature algorithms that the client wants to use in order of preference.
-# Refer to https://man7.org/linux/man-pages/man5/ssh_config.5.html
-ssh_host_key_algorithms: -ecdsa-sha2-nistp256
+# Refer to https://man7.org/linux/man-pages/man5/ssh_config.5.html and https://www.sshaudit.com
+ssh_host_key_algorithms: sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256
 
 # Specifies the available KEX (Key Exchange) algorithms.
-# Refer to https://man7.org/linux/man-pages/man5/ssh_config.5.html
-ssh_kex_algorithms: -ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha256
+# Refer to https://man7.org/linux/man-pages/man5/ssh_config.5.html and https://www.sshaudit.com
+ssh_kex_algorithms: sntrup761x25519-sha512@openssh.com,gss-curve25519-sha256-,curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256,gss-group16-sha512-,diffie-hellman-group16-sha512
 
 # Specifies the MAC (message authentication code) algorithms in order of preference.
-# Refer to https://man7.org/linux/man-pages/man5/ssh_config.5.html
-ssh_macs: -hmac-sha1,hmac-sha1-etm@openssh.com,hmac-sha2-256,hmac-sha2-512,umac-128@openssh.com,umac-64-etm@openssh.com,umac-64@openssh.com
+# Refer to https://man7.org/linux/man-pages/man5/ssh_config.5.html and https://www.sshaudit.com
+ssh_macs: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com
 
 # Password authentication is allowed.
 ssh_password_authentication: false
