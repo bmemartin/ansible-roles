@@ -2,7 +2,7 @@
 
 - name: Collect information on the docker compose file
   ansible.builtin.stat:
-    path: '{{ docker_compose_file }}'
+    path: "{{ docker_compose_file }}"
   become: false
   delegate_to: localhost
   run_once: true
@@ -20,44 +20,44 @@
 
 - name: Create project directory
   ansible.builtin.file:
-    name: '{{ docker_compose_path }}'
+    name: "{{ docker_compose_path }}"
     state: directory
-    owner: '{{ docker_compose_owner }}'
-    group: '{{ docker_compose_group }}'
-    mode: '0755'
+    owner: "{{ docker_compose_owner }}"
+    group: "{{ docker_compose_group }}"
+    mode: "0755"
   notify: docker compose recreate
   tags: docker_compose
 
 - name: Create docker compose file
   ansible.builtin.copy:
-    src: '{{ docker_compose_file }}'
-    dest: '{{ docker_compose_path }}/docker-compose.yaml'
-    owner: '{{ docker_compose_owner }}'
-    group: '{{ docker_compose_group }}'
-    mode: '0644'
+    src: "{{ docker_compose_file }}"
+    dest: "{{ docker_compose_path }}/docker-compose.yaml"
+    owner: "{{ docker_compose_owner }}"
+    group: "{{ docker_compose_group }}"
+    mode: "0644"
   notify: docker compose recreate
   tags: docker_compose
 
 - name: Create additional files and directories
   include_tasks: files.yaml
-  loop: '{{ docker_compose_files | default([], true) }}'
+  loop: "{{ docker_compose_files | default([], true) }}"
   loop_control:
     label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
   tags: docker_compose
 
 - name: Create docker network
   community.docker.docker_network:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: present
-  loop: '{{ docker_compose_networks | default([], true) }}'
+  loop: "{{ docker_compose_networks | default([], true) }}"
   notify: docker compose recreate
   tags: docker_compose
 
 - name: Apply docker compose project
   community.docker.docker_compose_v2:
-    project_src: '{{ docker_compose_path }}'
-    state: '{{ docker_compose_state }}'
-    pull: '{{ docker_compose_pull }}'
-    recreate: '{{ docker_compose_recreate }}'
+    project_src: "{{ docker_compose_path }}"
+    state: "{{ docker_compose_state }}"
+    pull: "{{ docker_compose_pull }}"
+    recreate: "{{ docker_compose_recreate }}"
   register: docker_compose_output
   tags: docker_compose

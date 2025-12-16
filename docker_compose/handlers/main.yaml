@@ -2,8 +2,8 @@
 
 - name: docker compose recreate
   community.docker.docker_compose_v2:
-    project_src: '{{ docker_compose_path }}'
-    state: '{{ docker_compose_state }}'
-    pull: '{{ docker_compose_pull }}'
+    project_src: "{{ docker_compose_path }}"
+    state: "{{ docker_compose_state }}"
+    pull: "{{ docker_compose_pull }}"
     recreate: always
   when: docker_compose_output is not defined or not docker_compose_output.changed

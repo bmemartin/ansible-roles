@@ -19,22 +19,22 @@ docker_compose_files:
 #   dest:
 
     # The name of the user to own the file or directory.
-#   owner: '{{ docker_compose_owner }}'
+#   owner: "{{ docker_compose_owner }}"
 
     # The name of the group to own the file or directory.
-#   group: '{{ docker_compose_group }}'
+#   group: "{{ docker_compose_group }}"
 
     # The permissions of the destination file or directory.
-#   mode: 'preserve'
+#   mode: preserve
 
 # The name of the group to own the project files and directories.
-docker_compose_group: '{{ ansible_user }}'
+docker_compose_group: "{{ ansible_user }}"
 
 # A list of docker networks to be created.
 docker_compose_networks:
 
 # The name of the user to own the project files and directories.
-docker_compose_owner: '{{ ansible_user }}'
+docker_compose_owner: "{{ ansible_user }}"
 
 # The remote path of the docker compose project.
 docker_compose_path:
