@@ -33,7 +33,7 @@
   ansible.builtin.command:
     cmd: pihole updatePihole
   register: _pihole_update
-  changed_when: '"update available" in _pihole_update.stdout'
+  changed_when: "'update available' in _pihole_update.stdout"
   when: _pihole_binary.stat.exists | default(false)
   notify: restart pihole-FTL.service
   tags:
