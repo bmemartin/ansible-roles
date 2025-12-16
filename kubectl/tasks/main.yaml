@@ -27,7 +27,7 @@
 
     - name: Set kubectl target version
       ansible.builtin.set_fact:
-        kubectl_version: '{{ _kubectl_latest.content | trim }}'
+        kubectl_version: "{{ _kubectl_latest.content | trim }}"
   when: kubectl_version is not defined or kubectl_version in [None, '']
   tags:
     - kubectl
@@ -39,19 +39,19 @@
       x86_64: amd64
       aarch64: arm64
   ansible.builtin.set_fact:
-    _kubectl_arch: '{{ arch_map[ansible_architecture] | default(ansible_architecture) }}'
+    _kubectl_arch: "{{ arch_map[ansible_architecture] | default(ansible_architecture) }}"
   tags:
     - kubectl
     - update
 
 - name: Install kubectl binary
   ansible.builtin.get_url:
-    url: 'https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ _kubectl_arch }}/kubectl'
+    url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ _kubectl_arch }}/kubectl"
     dest: /usr/local/bin/kubectl
-    checksum: 'sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ _kubectl_arch }}/kubectl.sha256'
+    checksum: "sha256:https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ _kubectl_arch }}/kubectl.sha256"
     owner: root
     group: root
-    mode: '0755'
+    mode: "0755"
   register: _kubectl_binary
   when:
     - kubectl_version != _kubectl_installed_version
@@ -61,7 +61,7 @@
 
 - name: Show kubectl version change
   ansible.builtin.debug:
-    msg: 'Kubectl version changed from {{ _kubectl_installed_version }} to {{ kubectl_version }}'
+    msg: "Kubectl version changed from {{ _kubectl_installed_version }} to {{ kubectl_version }}"
   when:
     - _kubectl_installed_version | length > 0
     - _kubectl_binary is changed
