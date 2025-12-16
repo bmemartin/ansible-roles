@@ -42,6 +42,7 @@
 
 - name: Apply Pi-hole configuration
   include_tasks: config.yaml
+  when: (item.key | default('', true) | string | length > 0) and item.value is defined
   loop: "{{ pihole_config | default([], true) }}"
   no_log: true
   tags: pihole

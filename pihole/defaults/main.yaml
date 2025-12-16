@@ -3,10 +3,10 @@
 # The custom configuration options.
 pihole_config:
     # The configuration name
-# - key:
+  - key:
 
     # The configuration value
-#   value:
+    value:
 
 # The list of errors to ignore during installation.
 pihole_install_ignore_errors:
