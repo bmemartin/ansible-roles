@@ -7,7 +7,7 @@ netplan_renderer: networkd
 # The ethernet device interfaces.
 netplan_ethernets:
     # The interface name.
-  - interface: '{{ ansible_default_ipv4.interface }}'
+  - interface: "{{ ansible_default_ipv4.interface }}"
 
     # Enable DHCP for IPv4.
     dhcp4: true
