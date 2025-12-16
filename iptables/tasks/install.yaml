@@ -6,8 +6,8 @@
       - iptables
       - iptables-persistent
     state: "{{ 'latest' if apt_update_latest else 'present' }}"
-    update_cache: '{{ apt_update_cache }}'
-    cache_valid_time: '{{ apt_cache_valid_time }}'
+    update_cache: "{{ apt_update_cache }}"
+    cache_valid_time: "{{ apt_cache_valid_time }}"
   notify:
     - save iptables rules
     - save ip6tables rules

@@ -2,16 +2,16 @@
 
 - name: Apply default chain policies
   ansible.builtin.iptables:
-    ip_version: '{{ item.ip_version }}'
-    chain: '{{ item.chain }}'
-    policy: '{{ item.policy }}'
+    ip_version: "{{ item.ip_version }}"
+    chain: "{{ item.chain }}"
+    policy: "{{ item.policy }}"
   loop:
-    - { ip_version: ipv4, chain: INPUT,   policy: '{{ iptables_policy_input }}' }
-    - { ip_version: ipv6, chain: INPUT,   policy: '{{ iptables_policy_input }}' }
-    - { ip_version: ipv4, chain: FORWARD, policy: '{{ iptables_policy_forward }}' }
-    - { ip_version: ipv6, chain: FORWARD, policy: '{{ iptables_policy_forward }}' }
-    - { ip_version: ipv4, chain: OUTPUT,  policy: '{{ iptables_policy_output }}' }
-    - { ip_version: ipv6, chain: OUTPUT,  policy: '{{ iptables_policy_output }}' }
+    - { ip_version: ipv4, chain: INPUT,   policy: "{{ iptables_policy_input }}" }
+    - { ip_version: ipv6, chain: INPUT,   policy: "{{ iptables_policy_input }}" }
+    - { ip_version: ipv4, chain: FORWARD, policy: "{{ iptables_policy_forward }}" }
+    - { ip_version: ipv6, chain: FORWARD, policy: "{{ iptables_policy_forward }}" }
+    - { ip_version: ipv4, chain: OUTPUT,  policy: "{{ iptables_policy_output }}" }
+    - { ip_version: ipv6, chain: OUTPUT,  policy: "{{ iptables_policy_output }}" }
   notify:
     - save iptables rules
     - save ip6tables rules

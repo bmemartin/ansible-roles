@@ -4,8 +4,8 @@
   block:
     - name: Set default policy to ACCEPT for INPUT, FORWARD, OUTPUT
       ansible.builtin.iptables:
-        ip_version: '{{ item.ip_version }}'
-        chain: '{{ item.chain }}'
+        ip_version: "{{ item.ip_version }}"
+        chain: "{{ item.chain }}"
         policy: ACCEPT
       loop:
         - { ip_version: ipv4, chain: INPUT }
@@ -17,7 +17,7 @@
 
     - name: Flush all iptables rules
       ansible.builtin.iptables:
-        ip_version: '{{ item }}'
+        ip_version: "{{ item }}"
         flush: true
       loop:
         - ipv4
