@@ -4,7 +4,6 @@ A collection of Ansible roles for automating host configuration and application 
 
 ## 📦 Roles
 
-- [Ansible](ansible/README.md)
 - [Certificate](certificate/README.md)
 - [Docker](docker/README.md)
 - [Docker Compose](docker_compose/README.md)
