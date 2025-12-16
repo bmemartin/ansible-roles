@@ -2,7 +2,7 @@
 
 - name: Set hostname
   ansible.builtin.hostname:
-    name: '{{ inventory_hostname }}'
+    name: "{{ inventory_hostname }}"
   register: _hostname_result
   tags: hostname
 
@@ -11,7 +11,7 @@
     path: /etc/hosts
     state: present
     regexp: '^127\.0\.1\.1\s+'
-    line: '127.0.1.1 {{ inventory_hostname }} {{ inventory_hostname_short }}'
+    line: "127.0.1.1 {{ inventory_hostname }} {{ inventory_hostname_short }}"
     insertafter: '^127\.0\.0\.1'
   tags: hostname
 
