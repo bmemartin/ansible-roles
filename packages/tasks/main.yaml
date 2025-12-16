@@ -2,8 +2,8 @@
 
 - name: Update package cache
   ansible.builtin.apt:
-    update_cache: '{{ apt_update_cache }}'
-    cache_valid_time: '{{ apt_cache_valid_time }}'
+    update_cache: "{{ apt_update_cache }}"
+    cache_valid_time: "{{ apt_cache_valid_time }}"
   tags:
     - packages
     - update
@@ -18,7 +18,7 @@
 
 - name: Install essential packages
   ansible.builtin.apt:
-    name: '{{ packages }}'
+    name: "{{ packages }}"
     state: present
   register: _apt_install_result
   tags: packages
@@ -50,7 +50,7 @@
 
 - name: Print summary of changed packages
   ansible.builtin.debug:
-    msg: '{{ _dpkg_changes.stdout_lines }}'
+    msg: "{{ _dpkg_changes.stdout_lines }}"
   when: _dpkg_changes.stdout_lines | length > 0
   changed_when: >
     (_apt_upgrade_result is defined and _apt_upgrade_result.changed) or
