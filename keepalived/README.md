@@ -15,7 +15,7 @@ Minimal Ansible playbook
     keepalived_vrrp_instances:
       - name: demo
         state: MASTER
-        interface: '{{ ansible_default_ipv4.interface }}'
+        interface: "{{ ansible_default_ipv4.interface }}"
         priority: 255
         virtual_ipaddress: 192.168.0.244/24
   roles:

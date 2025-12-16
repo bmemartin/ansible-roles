@@ -31,7 +31,7 @@ keepalived_vrrp_instances:
 #   check_unicast_src: false
 
     # The network interface to bind to.
-#   interface: '{{ ansible_default_ipv4.interface }}'
+#   interface: "{{ ansible_default_ipv4.interface }}"
 
     # The instance name.
 #   name:
