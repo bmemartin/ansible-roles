@@ -1,10 +1,10 @@
 ---
 
 # The name of the group to own the certificate files and directories.
-certificate_group: '{{ ansible_user }}'
+certificate_group: "{{ ansible_user }}"
 
 # The name of the user to own the certificate files and directories.
-certificate_owner: '{{ ansible_user }}'
+certificate_owner: "{{ ansible_user }}"
 
 # The remote path of the certificate directory.
 certificate_path:
