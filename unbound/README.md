@@ -25,19 +25,3 @@ Available configuration options, along with default values, are documented in [d
 | --- | ----------- |
 | unbound | All tasks |
 | update | Update all components |
-
-## 🪵 Logs and Status
-
-The Unbound configuration allows for the definition of a logfile to which logs are written. If unspecified, logs will be written to syslog and can be found as per below.
-
-Show logs from the unbound service
-
-```shell
-journalctl -u unbound
-```
-
-Show runtime status of the unbound service
-
-```shell
-systemctl status unbound
-```
