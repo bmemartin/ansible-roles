@@ -48,7 +48,12 @@
 
 - name: Install PostgreSQL
   ansible.builtin.apt:
-    name: "postgresql-{{ postgresql_version }}"
+    name: >-
+      {{
+        'postgresql-' ~ postgresql_version
+        if postgresql_version is defined and postgresql_version
+        else 'postgresql'
+      }}
     state: "{{ 'latest' if apt_update_latest else 'present' }}"
     update_cache: true
   tags:

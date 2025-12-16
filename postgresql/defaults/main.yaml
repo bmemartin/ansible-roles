@@ -10,4 +10,4 @@ apt_update_cache: true
 apt_update_latest: true
 
 # The specific version to download and install.
-postgresql_version: 18
+postgresql_version:
