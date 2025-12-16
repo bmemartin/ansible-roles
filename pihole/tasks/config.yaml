@@ -2,7 +2,7 @@
 
 - name: Set internal configuration variables
   ansible.builtin.set_fact:
-    _pck: '{{ item.key }}'
+    _pck: "{{ item.key }}"
     _pcv: "{% if (item.value | type_debug) == 'list' %}[ {{ item.value | join(', ')}} ]{% else %}{{ item.value }}{% endif %}"
     _pcj: "{% if (item.value | type_debug) == 'list' %}{{ item.value | to_json }}{% else %}{{ item.value }}{% endif %}"
   tags: pihole

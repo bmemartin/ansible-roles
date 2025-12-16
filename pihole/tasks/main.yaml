@@ -23,7 +23,7 @@
   tags: pihole
 
 - name: Install Pi-hole
-  ansible.builtin.shell: 'curl -sSL https://install.pi-hole.net | PIHOLE_SKIP_OS_CHECK={{ pihole_skip_os_check | to_json }} bash /dev/stdin --unattended'
+  ansible.builtin.shell: "curl -sSL https://install.pi-hole.net | PIHOLE_SKIP_OS_CHECK={{ pihole_skip_os_check | to_json }} bash /dev/stdin --unattended"
   register: _pihole_install
   when: not _pihole_binary.stat.exists | default(false)
   failed_when: _pihole_install.stderr_lines | difference(pihole_install_ignore_errors) | length
@@ -42,6 +42,6 @@
 
 - name: Apply Pi-hole configuration
   include_tasks: config.yaml
-  loop: '{{ pihole_config | default([], true) }}'
+  loop: "{{ pihole_config | default([], true) }}"
   no_log: true
   tags: pihole

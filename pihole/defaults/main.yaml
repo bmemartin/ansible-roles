@@ -10,7 +10,7 @@ pihole_config:
 
 # The list of errors to ignore during installation.
 pihole_install_ignore_errors:
-  - 'Failed to stop pihole-FTL.service: Unit pihole-FTL.service not loaded.'
+  - "Failed to stop pihole-FTL.service: Unit pihole-FTL.service not loaded."
 
 # Skip the OS check during installation.
 pihole_skip_os_check: false
