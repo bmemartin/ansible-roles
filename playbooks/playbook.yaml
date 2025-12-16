@@ -14,11 +14,11 @@
 
 ## Stage 1
 
-- import_playbook: ansible.yaml
 - import_playbook: certificate.yaml
 - import_playbook: docker.yaml
 - import_playbook: keepalived.yaml
 - import_playbook: kubectl.yaml
+- import_playbook: pipx.yaml
 - import_playbook: postgresql.yaml
 - import_playbook: unbound.yaml
 
