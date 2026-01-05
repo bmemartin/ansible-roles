@@ -35,7 +35,7 @@ netplan_ethernets:
 #     - to: default
 
         # The address to the gateway to use for this route.
-#       via: <gateway>
+#       via: "{{ ansible_default_ipv4.gateway }}"
 
         # Specifies if the route is directly connected to the interface.
 #       on_link: true
