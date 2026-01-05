@@ -4,14 +4,14 @@
   ansible.builtin.stat:
     path: /var/run/reboot-required
   register: _reboot_required
-  when: not reboot_always
+  when: not (reboot_always | bool)
   tags:
     - reboot
     - update
 
 - name: Flush pending handlers before reboot
   ansible.builtin.meta: flush_handlers
-  when: reboot_always or _reboot_required.stat.exists
+  when: (reboot_always | bool) or _reboot_required.stat.exists
   tags:
     - reboot
     - update
@@ -22,7 +22,7 @@
     reboot_timeout: 600
     post_reboot_delay: 30
     test_command: uptime
-  when: reboot_always or _reboot_required.stat.exists
+  when: (reboot_always | bool) or _reboot_required.stat.exists
   tags:
     - reboot
     - update
