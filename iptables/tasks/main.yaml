@@ -5,7 +5,7 @@
 
 - name: Reset iptables rules (optional)
   include_tasks: reset.yaml
-  when: iptables_reset
+  when: iptables_reset | bool
 
 - name: Apply iptables rules
   include_tasks: rules.yaml

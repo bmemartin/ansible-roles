@@ -22,7 +22,7 @@
       loop:
         - ipv4
         - ipv6
-  when: iptables_reset
+  when: iptables_reset | bool
   notify:
     - save iptables rules
     - save ip6tables rules
