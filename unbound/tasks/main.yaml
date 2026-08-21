@@ -47,6 +47,6 @@
         state: present
         search_string: "{{ unbound_logfile }}"
       notify: Reload AppArmor profile
-  when: unbound_logfile
+  when: unbound_logfile is not none and unbound_logfile | length > 0
   notify: Restart unbound.service
   tags: unbound
