@@ -25,15 +25,15 @@
 
 - name: Remove old packages from cache
   ansible.builtin.apt:
-    autoclean: yes
+    autoclean: true
   tags:
     - packages
     - update
 
 - name: Remove unused dependency packages
   ansible.builtin.apt:
-    autoremove: yes
-    purge: yes
+    autoremove: true
+    purge: true
   register: _apt_remove_result
   tags:
     - packages
@@ -41,7 +41,7 @@
 
 - name: Find packages changed today
   ansible.builtin.shell:
-    cmd: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade|remove|purge) " /var/log/dpkg.log | cut -d ' ' -f 3-5
+    cmd: set -o pipefail && grep -E "^$(date +%Y-%m-%d).+ (install|upgrade|remove|purge) " /var/log/dpkg.log | cut -d ' ' -f 3-5
   register: _dpkg_changes
   changed_when: false
   tags:
