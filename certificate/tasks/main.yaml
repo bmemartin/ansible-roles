@@ -2,7 +2,7 @@
 
 - name: Assert required variables are defined and valid
   ansible.builtin.assert:
-    that: certificate_path
+    that: certificate_path is not none and certificate_path | length > 0
     fail_msg: "The required variable 'certificate_path' must be defined and non-empty."
     quiet: true
   tags: certificate
