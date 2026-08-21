@@ -7,7 +7,7 @@ netplan_renderer: networkd
 # The ethernet device interfaces.
 netplan_ethernets:
     # The interface name.
-  - interface: "{{ ansible_default_ipv4.interface }}"
+  - interface: "{{ ansible_facts['default_ipv4']['interface'] }}"
 
     # Enable DHCP for IPv4.
     dhcp4: true
@@ -35,7 +35,7 @@ netplan_ethernets:
 #     - to: default
 
         # The address to the gateway to use for this route.
-#       via: "{{ ansible_default_ipv4.gateway }}"
+#       via: "{{ ansible_facts['default_ipv4']['gateway'] }}"
 
         # Specifies if the route is directly connected to the interface.
 #       on_link: true
