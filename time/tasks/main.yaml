@@ -20,6 +20,6 @@
     regexp: "^FallbackNTP="
     line: "FallbackNTP={{ ntp_fallback }}"
     state: present
-  when: ntp_fallback
+  when: ntp_fallback is not none and ntp_fallback | length > 0
   notify: Restart timesyncd.service
   tags: time
