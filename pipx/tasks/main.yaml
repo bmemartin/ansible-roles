@@ -14,6 +14,7 @@
 - name: Ensure pipx user path is configured
   ansible.builtin.command:
     cmd: pipx ensurepath
+  become: true
   become_user: "{{ pipx_user }}"
   register: _pipx_ensurepath_result
   failed_when: _pipx_ensurepath_result.rc != 0 or 'not added' in _pipx_ensurepath_result.stdout
@@ -26,6 +27,7 @@
     state: "{{ 'latest' if pipx_update_latest else 'present' }}"
     install_deps: "{{ pipx_install_deps }}"
     include_injected: "{{ pipx_include_injected }}"
+  become: true
   become_user: "{{ pipx_user }}"
   loop: >-
     {{
