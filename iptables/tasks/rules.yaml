@@ -50,6 +50,6 @@
         - INPUT
         - OUTPUT
   notify:
-    - save iptables rules
-    - save ip6tables rules
+    - Save iptables rules
+    - Save ip6tables rules
   tags: iptables

@@ -1,14 +1,14 @@
 ---
 
 - name: Install iptables packages
-  include_tasks: install.yaml
+  ansible.builtin.include_tasks: install.yaml
 
 - name: Reset iptables rules (optional)
-  include_tasks: reset.yaml
+  ansible.builtin.include_tasks: reset.yaml
   when: iptables_reset | bool
 
 - name: Apply iptables rules
-  include_tasks: rules.yaml
+  ansible.builtin.include_tasks: rules.yaml
 
 - name: Set default chain policies
-  include_tasks: policies.yaml
+  ansible.builtin.include_tasks: policies.yaml
