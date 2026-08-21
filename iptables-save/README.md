@@ -26,6 +26,6 @@ Then, notify the handler(s) from any task that modifies iptables rules:
       - RELATED
     jump: ACCEPT
   notify:
-    - save iptables rules
-    - save ip6tables rules
+    - Save iptables rules
+    - Save ip6tables rules
 ```

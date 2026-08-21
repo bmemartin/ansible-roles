@@ -1,9 +1,11 @@
 ---
 
-- name: save iptables rules
+- name: Save iptables rules
   ansible.builtin.command:
     cmd: iptables-save -f /etc/iptables/rules.v4
+  changed_when: true
 
-- name: save ip6tables rules
+- name: Save ip6tables rules
   ansible.builtin.command:
     cmd: ip6tables-save -f /etc/iptables/rules.v6
+  changed_when: true
