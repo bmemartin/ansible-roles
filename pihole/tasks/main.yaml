@@ -27,7 +27,7 @@
   register: _pihole_install
   when: not _pihole_binary.stat.exists | default(false)
   changed_when: true
-  failed_when: _pihole_install.stderr_lines | difference(pihole_install_ignore_errors) | length
+  failed_when: _pihole_install.stderr_lines | difference(pihole_install_ignore_errors) | length > 0
   tags: pihole
 
 - name: Update Pi-hole
