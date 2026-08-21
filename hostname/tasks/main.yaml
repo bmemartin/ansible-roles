@@ -3,7 +3,7 @@
 - name: Set hostname
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
-  register: _hostname_result
+  notify: Reboot host
   tags: hostname
 
 - name: Ensure local hostname entry exists in /etc/hosts
@@ -13,13 +13,4 @@
     regexp: '^127\.0\.1\.1\s+'
     line: "127.0.1.1 {{ inventory_hostname }} {{ inventory_hostname_short }}"
     insertafter: '^127\.0\.0\.1'
-  tags: hostname
-
-- name: Reboot host after hostname change
-  ansible.builtin.reboot:
-    msg: Reboot initiated by Ansible due to hostname change
-    reboot_timeout: 600
-    post_reboot_delay: 30
-    test_command: uptime
-  when: _hostname_result.changed
   tags: hostname
