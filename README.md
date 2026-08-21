@@ -28,14 +28,24 @@ A collection of Ansible roles for automating host configuration and application 
 
 - 24.04 (Noble Numbat)
 
+## 🔧 Setup
+
+### Ansible collections
+
+Install the required Ansible collections:
+
+```shell
+ansible-galaxy collection install -r requirements.yaml
+```
+
 ## ✅ Testing
 
-1. Create the Ansible `hosts` file with the desired host entries.
+Create the Ansible `hosts` file with the desired host entries.
 
-2. Execute all playbooks with the following command:
+Execute all playbooks with the following command:
 
-    ```shell
-    ANSIBLE_HOST_KEY_CHECKING=false \
-    ANSIBLE_ROLES_PATH=. \
-    ansible-playbook --inventory hosts playbooks/playbook.yaml
-    ```
+```shell
+ANSIBLE_HOST_KEY_CHECKING=false \
+ANSIBLE_ROLES_PATH=. \
+ansible-playbook --inventory hosts playbooks/playbook.yaml
+```
