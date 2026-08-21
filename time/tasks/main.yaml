@@ -11,7 +11,7 @@
     regexp: "^NTP="
     line: "NTP={{ ntp }}"
     state: present
-  notify: restart timesyncd.service
+  notify: Restart timesyncd.service
   tags: time
 
 - name: Configure fallback NTP server in timesyncd
@@ -21,5 +21,5 @@
     line: "FallbackNTP={{ ntp_fallback }}"
     state: present
   when: ntp_fallback
-  notify: restart timesyncd.service
+  notify: Restart timesyncd.service
   tags: time
