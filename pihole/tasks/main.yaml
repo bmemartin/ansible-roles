@@ -8,13 +8,13 @@
     - pihole
     - update
 
-- name: Create Pi-hole directory
+- name: Create Pi-hole directory # noqa: risky-file-permissions
   ansible.builtin.file:
     path: /etc/pihole
     state: directory
   tags: pihole
 
-- name: Create Pi-hole configuration file
+- name: Create Pi-hole configuration file # noqa: risky-file-permissions
   ansible.builtin.file:
     path: /etc/pihole/pihole.toml
     state: touch
@@ -22,10 +22,11 @@
     modification_time: preserve
   tags: pihole
 
-- name: Install Pi-hole
+- name: Install Pi-hole # noqa: command-instead-of-module risky-shell-pipe
   ansible.builtin.shell: "curl -sSL https://install.pi-hole.net | PIHOLE_SKIP_OS_CHECK={{ pihole_skip_os_check | to_json }} bash /dev/stdin --unattended"
   register: _pihole_install
   when: not _pihole_binary.stat.exists | default(false)
+  changed_when: true
   failed_when: _pihole_install.stderr_lines | difference(pihole_install_ignore_errors) | length
   tags: pihole
 
@@ -35,13 +36,13 @@
   register: _pihole_update
   changed_when: "'update available' in _pihole_update.stdout"
   when: _pihole_binary.stat.exists | default(false)
-  notify: restart pihole-FTL.service
+  notify: Restart pihole-FTL.service
   tags:
     - pihole
     - update
 
 - name: Apply Pi-hole configuration
-  include_tasks: config.yaml
+  ansible.builtin.include_tasks: config.yaml
   when: (item.key | default('', true) | string | length > 0) and item.value is defined
   loop: "{{ pihole_config | default([], true) }}"
   no_log: true
