@@ -39,9 +39,9 @@
     - packages
     - update
 
-- name: Find packages changed today
+- name: Find packages changed today # noqa: risky-shell-pipe
   ansible.builtin.shell:
-    cmd: set -o pipefail && grep -E "^$(date +%Y-%m-%d).+ (install|upgrade|remove|purge) " /var/log/dpkg.log | cut -d ' ' -f 3-5
+    cmd: grep -E "^$(date +%Y-%m-%d).+ (install|upgrade|remove|purge) " /var/log/dpkg.log | cut -d ' ' -f 3-5
   register: _dpkg_changes
   changed_when: false
   tags:
