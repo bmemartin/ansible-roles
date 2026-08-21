@@ -43,7 +43,7 @@
     group: root
     owner: root
     mode: "0644"
-  notify: restart keepalived.service
+  notify: Restart keepalived.service
   tags: keepalived
 
 - name: Deploy VRRP instance configurations
@@ -54,5 +54,5 @@
     owner: root
     mode: "0644"
   loop: "{{ keepalived_vrrp_instances | default([], true) }}"
-  notify: restart keepalived.service
+  notify: Restart keepalived.service
   tags: keepalived
