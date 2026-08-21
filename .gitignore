@@ -1,8 +1,5 @@
-# macOS
 .DS_Store
-
-# Ansible hosts inventory
-hosts
-
-# Generated files by Ansible
 ansible.log
+hosts
+.ansible/
+.venv/
