@@ -52,14 +52,19 @@
       armv6l: armhf
       ppc64le: ppc64el
   ansible.builtin.set_fact:
-    apt_arch: "{{ arch_map[ansible_architecture] | default(ansible_architecture) }}"
+    apt_arch: "{{ arch_map[ansible_facts['architecture']] | default(ansible_facts['architecture']) }}"
   tags: docker
 
 - name: Add Docker repository
-  ansible.builtin.apt_repository:
-    repo: "deb [arch={{ apt_arch }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+  ansible.builtin.deb822_repository:
+    name: docker
+    types: deb
+    uris: https://download.docker.com/linux/ubuntu
+    suites: "{{ ansible_facts['distribution_release'] }}"
+    components: stable
+    architectures: "{{ apt_arch }}"
+    signed_by: /etc/apt/keyrings/docker.asc
     state: present
-    filename: docker
   tags: docker
 
 - name: Install Docker packages
