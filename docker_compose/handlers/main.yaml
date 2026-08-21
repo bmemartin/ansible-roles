@@ -1,6 +1,6 @@
 ---
 
-- name: docker compose recreate
+- name: Docker compose recreate
   community.docker.docker_compose_v2:
     project_src: "{{ docker_compose_path }}"
     state: "{{ docker_compose_state }}"

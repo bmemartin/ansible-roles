@@ -25,7 +25,7 @@
     owner: "{{ docker_compose_owner }}"
     group: "{{ docker_compose_group }}"
     mode: "0755"
-  notify: docker compose recreate
+  notify: Docker compose recreate
   tags: docker_compose
 
 - name: Create docker compose file
@@ -35,11 +35,11 @@
     owner: "{{ docker_compose_owner }}"
     group: "{{ docker_compose_group }}"
     mode: "0644"
-  notify: docker compose recreate
+  notify: Docker compose recreate
   tags: docker_compose
 
 - name: Create additional files and directories
-  include_tasks: files.yaml
+  ansible.builtin.include_tasks: files.yaml
   loop: "{{ docker_compose_files | default([], true) }}"
   loop_control:
     label: "{{ item | ansible.utils.remove_keys(target=['content']) }}"
@@ -50,7 +50,7 @@
     name: "{{ item }}"
     state: present
   loop: "{{ docker_compose_networks | default([], true) }}"
-  notify: docker compose recreate
+  notify: Docker compose recreate
   tags: docker_compose
 
 - name: Apply docker compose project

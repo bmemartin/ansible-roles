@@ -15,7 +15,7 @@
     group: "{{ item.group | default(docker_compose_group, true) }}"
     mode: "{{ item.mode | default('0755', true) }}"
   when: item.src is not defined and item.content is not defined and item.template is not defined
-  notify: docker compose recreate
+  notify: Docker compose recreate
   tags: docker_compose
 
 - name: Copy file or directory
@@ -27,7 +27,7 @@
     mode: "{{ item.mode | default('preserve', true) }}"
     force: true
   when: item.src is defined
-  notify: docker compose recreate
+  notify: Docker compose recreate
   tags: docker_compose
 
 - name: Create file from content
@@ -39,7 +39,7 @@
     mode: "{{ item.mode | default('0400', true) }}"
     force: true
   when: item.content is defined
-  notify: docker compose recreate
+  notify: Docker compose recreate
   tags: docker_compose
 
 - name: Create file from template
@@ -51,5 +51,5 @@
     mode: "{{ item.mode | default('0400', true) }}"
     force: true
   when: item.template is defined
-  notify: docker compose recreate
+  notify: Docker compose recreate
   tags: docker_compose
