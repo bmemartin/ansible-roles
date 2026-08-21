@@ -16,7 +16,7 @@
     owner: root
     group: root
     mode: "0600"
-  notify: apply netplan
+  notify: Apply netplan
   tags: netplan
 
 - name: Configure networkd overrides for interfaces
@@ -42,5 +42,5 @@
       when: item.networkd_overrides is defined
       loop: "{{ netplan_ethernets }}"
   when: netplan_renderer == 'networkd'
-  notify: restart networkd.service
+  notify: Restart networkd.service
   tags: netplan
