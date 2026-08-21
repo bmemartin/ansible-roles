@@ -17,7 +17,7 @@
     owner: root
     group: root
     mode: "0644"
-  register: _unbound_configuration
+  notify: Validate Unbound configuration
   tags: unbound
 
 - name: Ensure Unbound log file
@@ -46,20 +46,7 @@
         line: "{{ unbound_logfile }} rw,"
         state: present
         search_string: "{{ unbound_logfile }}"
-      register: _unbound_apparmor
-
-    - name: Reload AppArmor profile if logfile added
-      ansible.builtin.command:
-        cmd: apparmor_parser -r /etc/apparmor.d/usr.sbin.unbound
-      when: _unbound_apparmor.changed
-      notify: restart apparmor.service
+      notify: Reload AppArmor profile
   when: unbound_logfile
-  notify: restart unbound.service
-  tags: unbound
-
-- name: Validate Unbound configuration
-  ansible.builtin.command:
-    cmd: unbound-checkconf /etc/unbound/unbound.conf.d/ansible.conf
-  when: _unbound_configuration.changed
-  notify: restart unbound.service
+  notify: Restart unbound.service
   tags: unbound

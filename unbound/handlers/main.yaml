@@ -1,11 +1,23 @@
 ---
 
-- name: restart apparmor.service
+- name: Validate Unbound configuration
+  ansible.builtin.command:
+    cmd: unbound-checkconf /etc/unbound/unbound.conf.d/ansible.conf
+  changed_when: true
+  notify: Restart unbound.service
+
+- name: Reload AppArmor profile
+  ansible.builtin.command:
+    cmd: apparmor_parser -r /etc/apparmor.d/usr.sbin.unbound
+  changed_when: true
+  notify: Restart apparmor.service
+
+- name: Restart apparmor.service
   ansible.builtin.systemd_service:
     name: apparmor.service
     state: restarted
 
-- name: restart unbound.service
+- name: Restart unbound.service
   ansible.builtin.systemd_service:
     name: unbound.service
     state: restarted
